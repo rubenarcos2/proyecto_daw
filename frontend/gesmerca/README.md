@@ -1,12 +1,11 @@
-![GesMerCa](.src/assets/img/icons/gesmerca.png)
+![GesMerCa](./src/assets/img/icons/gesmerca.png)
 
-# Angular example
+# GesMerCa proyect
 
-This demo shows how to implement of the knowledge acquired throughout the training cycle of multiplatform application development.
-I have focused the application on the knowledge acquired about the management of user access privileges to different elements (or modules as I will refer to throughout the document) of the application, the management of users ranked in different groups (called roles) and the administration by an authorized user.
-No less relevant has been the application of knowledge in the design and management of relational databases and their implementation platforms. Another factor that has been taken into account has been the security of the environment of use and of the application, implementing features such as the physical blocking of the terminal, the encryption of sensitive data, or the prevention of the use of elements sensitive to the injection of automated information. (cracking or brute force attacks).
+This demo shows how to implement of the knowledge acquired throughout the training cycle of web application development.
+I have focused the application on the knowledge acquired on the management of user access privileges to different elements (or modules as I will refer to throughout the document) of the application, the management of hierarchical users in different groups (called roles) and the administration by an authorised user. No less relevant has been the application of knowledge in the design and management of relational databases and their implementation platforms. Another factor taken into account was the security of the environment of use (JWT) and of the application (Angular), implementing functionalities such as the encryption of sensitive data, or the prevention of the use of elements sensitive to the injection of automated information (cracking or brute force attacks).
 
-[![Try the demo](.src/assets/img/icons/gesmerca.png)](https://vps.rarcos.com:10448/)
+[![Try the demo](./src/assets/img/icons/gesmerca.png)](https://vps.rarcos.com:10448/)
 
 # How to run it locally
 
@@ -26,11 +25,7 @@ $ npm install
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
+## Build to production serve
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
