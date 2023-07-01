@@ -7,7 +7,7 @@ Proyecto integrado fin del Ciclo Formativo de Grado Superior de Aplicaciones Web
 Integrated project for the Ciclo Formativo de Grado Superior de Aplicaciones Web.
 
 ## Descripción / Description
-La finalidad principal de la aplicación, ha sido la demostración de la puesta en práctica de los conocimientos  adquiridos a lo  largo  del  ciclo  formativo  de  desarrollo  de  aplicaciones multiplataforma.  
+La finalidad principal de la aplicación, ha sido la demostración de la puesta en práctica de los conocimientos  adquiridos a lo  largo  del  ciclo  formativo  de  desarrollo  de  aplicaciones web.  
 He  focalizado  la  aplicación  en  los  conocimientos  adquiridos  sobre  la gestión de privilegios  de acceso  de usuarios a distintos elementos (o módulos como me referiré a lo largo del documento) de la aplicación, la gestión de usuarios jerarquizados en distintos  grupos  (denominados  roles)  y  la  administración  por  parte  de  un   usuario autorizado. 
 No menos relevante ha sido la aplicación de los conocimientos en el diseño y gestión de bases de datos relacionales y las plataformas de implementación de estas. Otro  factor  que  se  tenido  en  cuenta  ha  sido  la  seguridad  del  entorno  de  uso  y  de  la aplicación,   implementando   funcionalidades   como   el   bloqueo   físico   del   terminal, la encriptación de datos sensibles, o la prevención en la utilización de elementos sensibles a la inyección de información automatizada (cracking o ataques de fuerza bruta).
 
