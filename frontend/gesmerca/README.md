@@ -1,9 +1,9 @@
-<p align="center"><a href="https://vps.rarcos.com:10448/" target="_blank"><img src="./src/assets/img/icons/gesmerca.png" width="400" alt="GesMerCa Logo"></a></p>
+<p align="center"><a href="https://vps.rarcos.com:10448/" target="_blank"><img src="./src/assets/img/icons/gesmerca.png" alt="GesMerCa Logo"></a></p>
 
 This demo shows how to implement of the knowledge acquired throughout the training cycle of web application development.
 I have focused the application on the knowledge acquired on the management of user access privileges to different elements (or modules as I will refer to throughout the document) of the application, the management of hierarchical users in different groups (called roles) and the administration by an authorised user. No less relevant has been the application of knowledge in the design and management of relational databases and their implementation platforms. Another factor taken into account was the security of the environment of use (JWT) and of the application (Angular), implementing functionalities such as the encryption of sensitive data, or the prevention of the use of elements sensitive to the injection of automated information (cracking or brute force attacks).
 
-<p align="center"><a href="https://vps.rarcos.com:10448/" target="_blank"><img src="./src/assets/img/icons/gesmerca.png" width="100" alt="Try the demo">Try the demo online</a></p>
+<p align="center"><a href="https://vps.rarcos.com:10448/" target="_blank"><img src="./src/assets/img/icons/gesmerca.png" width="50" alt="Try the demo">Try the demo online</a></p>
 
 # How to run it locally
 
