@@ -3,13 +3,12 @@ All content is licensed under a Creative Commons Attribution 4.0 International L
  
 # GesMerca - Proyecto fin de ciclo (Angular/Laravel)
 Proyecto integrado fin del Ciclo Formativo de Grado Superior de Aplicaciones Web.
-
 Integrated project for the Ciclo Formativo de Grado Superior de Aplicaciones Web.
 
 ## Descripción / Description
 La finalidad principal de la aplicación, ha sido la demostración de la puesta en práctica de los conocimientos  adquiridos a lo  largo  del  ciclo  formativo  de  desarrollo  de  aplicaciones web.  
 He  focalizado  la  aplicación  en  los  conocimientos  adquiridos  sobre  la gestión de privilegios  de acceso  de usuarios a distintos elementos (o módulos como me referiré a lo largo del documento) de la aplicación, la gestión de usuarios jerarquizados en distintos  grupos  (denominados  roles)  y  la  administración  por  parte  de  un   usuario autorizado. 
-No menos relevante ha sido la aplicación de los conocimientos en el diseño y gestión de bases de datos relacionales y las plataformas de implementación de estas. Otro  factor  que  se  tenido  en  cuenta  ha  sido  la  seguridad  del  entorno  de  uso  y  de  la aplicación,   implementando   funcionalidades   como   el   bloqueo   físico   del   terminal, la encriptación de datos sensibles, o la prevención en la utilización de elementos sensibles a la inyección de información automatizada (cracking o ataques de fuerza bruta).
+No menos relevante ha sido la aplicación de los conocimientos en el diseño y gestión de bases de datos relacionales y las plataformas de implementación de estas. Otro  factor  que  se ha tenido  en  cuenta  ha  sido  la  seguridad  del  entorno  de  uso (JWT) y  de  la aplicación (Angular), implementando funcionalidades como, la encriptación de datos sensibles, o la prevención en la utilización de elementos sensibles a la inyección de información automatizada (cracking o ataques de fuerza bruta).
 
 The main purpose of the application has been the demonstration of the implementation of the knowledge acquired throughout the training cycle of multiplatform application development.
 I have focused the application on the knowledge acquired about the management of user access privileges to different elements (or modules as I will refer to throughout the document) of the application, the management of users ranked in different groups (called roles) and the administration by an authorized user.
