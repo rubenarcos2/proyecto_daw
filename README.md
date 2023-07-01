@@ -17,6 +17,7 @@ No less relevant has been the application of knowledge in the design and managem
  
 ## Documentación / Documents
 Lea toda la información disponible antes de utilizar el software en: https://www.rarcos.com/proyecto-integrado/
+
 Read all info before use this software: https://www.rarcos.com/proyecto-integrado/
 
 ## Licencia / License [![License: CC BY-NC-ND 4.0](https://licensebuttons.net/l/by-nc-nd/4.0/80x15.png)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
