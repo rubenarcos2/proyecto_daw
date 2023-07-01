@@ -3,6 +3,7 @@ All content is licensed under a Creative Commons Attribution 4.0 International L
  
 # GesMerca - Proyecto fin de ciclo (Angular/Laravel)
 Proyecto integrado fin del Ciclo Formativo de Grado Superior de Aplicaciones Web.
+
 Integrated project for the Ciclo Formativo de Grado Superior de Aplicaciones Web.
 
 ## Descripción / Description
@@ -18,7 +19,7 @@ No less relevant has been the application of knowledge in the design and managem
 Lea toda la información disponible antes de utilizar el software en: https://www.rarcos.com/proyecto-integrado/
 Read all info before use this software: https://www.rarcos.com/proyecto-integrado/
 
-### Licencia / License
+## Licencia / License
 This work and all content is licensed under Creative Commons: Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
 [More info](https://creativecommons.org/licenses/by-nc-nd/4.0/)
 
@@ -28,7 +29,7 @@ Esta obra y todo su contenido, está licenciado bajo una licencia de Creative Co
 
 ## creative commons  [![License: CC BY-NC-ND 4.0](https://licensebuttons.net/l/by-nc-nd/4.0/80x15.png)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
 
-# Attribution-NonCommercial-NoDerivatives 4.0 International
+## Attribution-NonCommercial-NoDerivatives 4.0 International
 
 Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
 
