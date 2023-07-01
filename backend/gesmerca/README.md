@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://vps.rarcos.com:10448/" target="_blank">
-        <img src="./src/assets/img/icons/gesmerca.png" alt="GesMerCa Logo">
+        <img src="../../frontend/gesmerca/src/assets/img/icons/gesmerca.png" alt="GesMerCa Logo">
     </a>
     <a href="https://laravel.com/" target="_blank">
         <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width=200 alt="Laravel Logo">
