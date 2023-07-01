@@ -15,7 +15,9 @@ I have focused the application on the knowledge acquired on the management of us
 $ git clone https://github.com/rubenarcos2/proyecto_daw.git
 ```
 
-2. Run `npm install` inside the downloaded/cloned folder:
+2. Go to directory `cd frontend/gesmerca` inside:
+
+3. Run `npm install` inside the downloaded/cloned folder:
 
 ```bash
 $ npm install
