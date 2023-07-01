@@ -10,10 +10,10 @@ No less relevant has been the application of knowledge in the design and managem
 
 # How to run it locally
 
-1. [Download](https://gitlab.com/tripetto/examples/angular/repository/master/archive.zip) or clone the [repository](https://gitlab.com/tripetto/examples/angular) to your local machine:
+1. [Download](https://github.com/rubenarcos2/proyecto_daw/archive/refs/heads/main.zip) or clone the [repository](https://github.com/rubenarcos2/proyecto_daw.git) to your local machine:
 
 ```bash
-$ git clone https://gitlab.com/tripetto/examples/angular.git
+$ git clone https://github.com/rubenarcos2/proyecto_daw.git
 ```
 
 2. Run `npm install` inside the downloaded/cloned folder:
@@ -22,26 +22,22 @@ $ git clone https://gitlab.com/tripetto/examples/angular.git
 $ npm install
 ```
 
-3. Start the dev server by running the command below. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Development server
 
-```bash
-$ npm test
-```
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-# Documentation
+## Code scaffolding
 
-The complete Tripetto documentation can be found at [docs.tripetto.com](https://docs.tripetto.com).
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-# Support
+## Build
 
-Run into issues or bugs? Report them [here](https://gitlab.com/tripetto/examples/angular/issues) and we'll look into them.
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-For general support contact us at [support@tripetto.com](mailto:support@tripetto.com). We're more than happy to assist you.
+## Running unit tests
 
-# License
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-Have a blast. [MIT](https://opensource.org/licenses/MIT).
+## Further help
 
-# About us
-
-If you want to learn more about Tripetto or contribute in any way, visit us at [Tripetto.com](https://tripetto.com/).
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
