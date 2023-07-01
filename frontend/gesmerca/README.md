@@ -1,6 +1,6 @@
 <p align="center"><a href="https://vps.rarcos.com:10448/" target="_blank"><img src="./src/assets/img/icons/gesmerca.png" alt="GesMerCa Logo"></a></p>
 
-<p align="justify">La finalidad principal de la aplicación, ha sido la demostración de la puesta en práctica de los conocimientos adquiridos a lo largo del ciclo formativo de desarrollo de aplicaciones web.
+<p align="justify">La finalidad de esta demostración es la puesta en práctica de los conocimientos adquiridos a lo largo del ciclo formativo de desarrollo de aplicaciones web.
 He focalizado la aplicación en los conocimientos adquiridos sobre la gestión de privilegios de acceso de usuarios a distintos elementos (o módulos como me referiré a lo largo del documento) de la aplicación, la gestión de usuarios jerarquizados en distintos grupos (denominados roles) y la administración por parte de un usuario autorizado. No menos relevante ha sido la aplicación de los conocimientos en el diseño y gestión de bases de datos relacionales y las plataformas de implementación de estas. Otro factor que se ha tenido en cuenta ha sido la seguridad del entorno de uso (JWT) y de la aplicación (Angular), implementando funcionalidades como, la encriptación de datos sensibles, o la prevención en la utilización de elementos sensibles a la inyección de información automatizada (cracking o ataques de fuerza bruta).</p>
 
 <p align="justify">This demo shows how to implement of the knowledge acquired throughout the training cycle of web application development.
