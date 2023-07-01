@@ -1,11 +1,11 @@
-![GesMerCa](./src/assets/img/icons/gesmerca.png)
+<div style="text-align: right">![GesMerCa](./src/assets/img/icons/gesmerca.png)</div>
 
-# GesMerCa proyect
+# GesMerCa
 
 This demo shows how to implement of the knowledge acquired throughout the training cycle of web application development.
 I have focused the application on the knowledge acquired on the management of user access privileges to different elements (or modules as I will refer to throughout the document) of the application, the management of hierarchical users in different groups (called roles) and the administration by an authorised user. No less relevant has been the application of knowledge in the design and management of relational databases and their implementation platforms. Another factor taken into account was the security of the environment of use (JWT) and of the application (Angular), implementing functionalities such as the encryption of sensitive data, or the prevention of the use of elements sensitive to the injection of automated information (cracking or brute force attacks).
 
-[![Try the demo](./src/assets/img/icons/gesmerca.png)](https://vps.rarcos.com:10448/)
+<div style="text-align: center">[Try the demo online](https://vps.rarcos.com:10448/)</div>
 
 # How to run it locally
 
