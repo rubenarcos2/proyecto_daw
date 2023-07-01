@@ -1,7 +1,9 @@
 <p align="center">
     <a href="https://vps.rarcos.com:10448/" target="_blank">
         <img src="./src/assets/img/icons/gesmerca.png" alt="GesMerCa Logo">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Angular_full_color_logo.svg" width=200 alt="Angular Logo">
+    </a>
+    <a href="https://angular.io/" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Angular_full_color_logo.svg" width=100 alt="Angular Logo">
     </a>
 </p>
 
