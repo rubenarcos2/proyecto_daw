@@ -3,6 +3,7 @@ All content is licensed under a Creative Commons Attribution 4.0 International L
  
 # GesMerca - Proyecto fin de ciclo (Angular/Laravel)
 Proyecto integrado fin del Ciclo Formativo de Grado Superior de Aplicaciones Web.
+
 Integrated project for the Ciclo Formativo de Grado Superior de Aplicaciones Web.
 
 ## Descripción / Description
