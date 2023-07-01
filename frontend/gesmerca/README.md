@@ -1,29 +1,47 @@
-# JWT Authentication In Angular
+![GesMerCa](.src/assets/img/icons/gesmerca.png)
 
-<p align="center"><img src="https://github.com/ultimateakash/angular-jwt/blob/master/src/assets/jwt-authentication-angular.png"></p>
+# Angular example
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.2.6.
+This demo shows how to implement of the knowledge acquired throughout the training cycle of multiplatform application development.
+I have focused the application on the knowledge acquired about the management of user access privileges to different elements (or modules as I will refer to throughout the document) of the application, the management of users ranked in different groups (called roles) and the administration by an authorized user.
+No less relevant has been the application of knowledge in the design and management of relational databases and their implementation platforms. Another factor that has been taken into account has been the security of the environment of use and of the application, implementing features such as the physical blocking of the terminal, the encryption of sensitive data, or the prevention of the use of elements sensitive to the injection of automated information. (cracking or brute force attacks).
 
-## Development server
+[![Try the demo](.src/assets/img/icons/gesmerca.png)](https://vps.rarcos.com:10448/)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+# How to run it locally
 
-## Code scaffolding
+1. [Download](https://gitlab.com/tripetto/examples/angular/repository/master/archive.zip) or clone the [repository](https://gitlab.com/tripetto/examples/angular) to your local machine:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```bash
+$ git clone https://gitlab.com/tripetto/examples/angular.git
+```
 
-## Build
+2. Run `npm install` inside the downloaded/cloned folder:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```bash
+$ npm install
+```
 
-## Running unit tests
+3. Start the dev server by running the command below. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```bash
+$ npm test
+```
 
-## Running end-to-end tests
+# Documentation
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+The complete Tripetto documentation can be found at [docs.tripetto.com](https://docs.tripetto.com).
 
-## Further help
+# Support
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Run into issues or bugs? Report them [here](https://gitlab.com/tripetto/examples/angular/issues) and we'll look into them.
+
+For general support contact us at [support@tripetto.com](mailto:support@tripetto.com). We're more than happy to assist you.
+
+# License
+
+Have a blast. [MIT](https://opensource.org/licenses/MIT).
+
+# About us
+
+If you want to learn more about Tripetto or contribute in any way, visit us at [Tripetto.com](https://tripetto.com/).
