@@ -1,0 +1,32 @@
+<div class="col-6 offset-3">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="inputEmail" class="form-label">Email</label>
+      <input type="email" class="form-control" id="inputEmail" formControlName="email" autocomplete="username">
+      <div class="form-text text-danger"
+        *ngIf="loginFormControls['email'].invalid && (loginFormControls['email'].dirty || loginFormControls['email'].touched)">
+        <ng-container *ngIf="loginFormControls['email'].errors?.['required']">
+          Introduzca una dirección de email.
+        </ng-container>
+        <ng-container *ngIf="loginFormControls['email'].errors?.['email']">
+          Introduzca una dirección de email válida.
+        </ng-container>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="inputPassword" class="form-label">Contraseña</label>
+      <input type="password" class="form-control" id="inputPassword" formControlName="password"
+        autocomplete="current-password">
+      <div class="form-text text-danger"
+        *ngIf="loginFormControls['password'].invalid && (loginFormControls['password'].dirty || loginFormControls['password'].touched)">
+        <ng-container *ngIf="loginFormControls['password'].errors?.['required']">
+          Introduzca su contraseña.
+        </ng-container>
+        <ng-container *ngIf="loginFormControls['password'].errors?.['minlength']">
+          La contraseña debe tener al menos 6 caracteres
+        </ng-container>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="!loginForm.valid || isSubmitted">Enviar</button>
+  </form>
+</div>
