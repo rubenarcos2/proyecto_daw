@@ -19,73 +19,91 @@ import { ConfigGeneralEditComponent } from './components/config/edit/edit.compon
 //Roles and permissions
 import { RoleListComponent } from './components/role/list/list.component';
 import { PermissionsListComponent } from './components/permissions/list/list.component';
+import { SupplierListComponent } from './components/suppliers/list/list.component';
+import { SupplierAddComponent } from './components/suppliers/add/add.component';
+import { SupplierEditComponent } from './components/suppliers/edit/edit.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: HomeComponent,
   },
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
   },
   {
     path: 'registro',
-    component: RegisterComponent
+    component: RegisterComponent,
   },
   {
     path: 'perfil',
     component: ProfileComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'productos',
     component: ProductListComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'productos/nuevo',
     component: ProductAddComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'productos/editar/:id',
     component: ProductEditComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'proveedores',
+    component: SupplierListComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'proveedores/nuevo',
+    component: SupplierAddComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'proveedores/editar/:id',
+    component: SupplierEditComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'config',
     component: ConfigListComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'config/general',
     component: ConfigGeneralListComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'config/general/editar/:id',
     component: ConfigGeneralEditComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'roles',
     component: RoleListComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'permisos',
     component: PermissionsListComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: '**',
     component: NotFoundComponent,
-  }
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

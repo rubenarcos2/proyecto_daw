@@ -71,6 +71,7 @@ class ProductController extends Controller
             $request->validate([
                 'name' => 'required|min:3',
                 'description' => 'required|min:3',
+                'supplier' => 'required',
                 'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
                 'price' => 'required',
                 'stock' => 'required',
@@ -79,6 +80,7 @@ class ProductController extends Controller
             $product = new Product;
             $product->name = $request->name;
             $product->description = $request->description;
+            $product->supplier = $request->supplier;
             if(!empty($request->image) || $request->image !== null){
                 $image_path = $request->file('image')->store('assets/img/products', 'public');
                 $product->image = URL::to('') . '/storage/' . $image_path;
@@ -148,6 +150,7 @@ class ProductController extends Controller
             $request->validate([
                 'name' => 'required|min:3',
                 'description' => 'required|min:3',
+                'supplier' => 'required',
                 'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
                 'price' => 'required',
                 'stock' => 'required',
@@ -156,6 +159,7 @@ class ProductController extends Controller
             $product = Product::find($request->id);
             $product->name = $request->name;
             $product->description = $request->description;
+            $product->supplier = $request->supplier;
             if($request->hasFile('image') && $request->file('image')->isValid()){
                 if($product->image !== URL::to('') . '/storage/assets/img/products/no-image.png'){
                     $image_name = substr($product->image, strlen(URL::to('').'/storage/assets/img/products/'));

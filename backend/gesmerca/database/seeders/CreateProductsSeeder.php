@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Product;
+use App\Models\Supplier;
 use Illuminate\Support\Facades\URL;
 use Faker\Factory as Faker;
 
@@ -16,12 +17,15 @@ class CreateProductsSeeder extends Seeder
     public function run(): void
     {
         $faker = Faker::create();
+        $suppliers = Supplier::all();
+
         $this->removeImages();
 
         for ($i=0; $i<12; $i++) { 
             $prod = Product::create([
                 'name' => 'Producto '.$i + 1, 
                 'description' => 'Descripción del producto '.$i + 1,
+                'supplier' => $suppliers[$faker->numberBetween($min = 1, $max = count($suppliers)-1)]->id,
                 'image' => URL::to('').':8000/storage/assets/img/products/'.$faker->image('storage/app/public/assets/img/products',640,480, null, false),
                 'price' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 100),
                 'stock' => $faker->numberBetween($min = 1, $max = 100)

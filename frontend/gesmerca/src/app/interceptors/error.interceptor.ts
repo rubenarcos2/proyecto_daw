@@ -14,6 +14,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       catchError(error => {
         if (!this.isLoggedOut) {
           this.isLoggedOut = true;
+          console.error(error?.status);
           if (error?.status === 401 || error?.status === 400) {
             this.authService.logout().subscribe({
               next: () => {

@@ -62,10 +62,8 @@ export class RoleListComponent implements OnInit {
   updateRole(event: any) {
     let btnSave = event.target;
     let userId = btnSave.id.substring('btn-'.length);
-    console.log(userId);
     let select = document.getElementById('select-roles-' + userId) as HTMLSelectElement;
     var roleId = select.value.substring(select.value.indexOf('-') + 1);
-    console.log(roleId);
     if (window.confirm('¿Está seguro que desea cambiar el rol al usuario?')) {
       let param = new FormData();
       param.append('id', roleId);

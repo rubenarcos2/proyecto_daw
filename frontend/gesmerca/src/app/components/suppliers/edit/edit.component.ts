@@ -1,0 +1,122 @@
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { Supplier } from 'src/app/models/supplier';
+import { SupplierService } from 'src/app/services/supplier.service';
+
+@Component({
+  selector: 'app-edit',
+  templateUrl: './edit.component.html',
+  styleUrls: ['./edit.component.css'],
+})
+export class SupplierEditComponent implements OnInit {
+  supplierForm!: FormGroup;
+  dataForm!: FormData;
+  returnUrl!: string;
+  isSubmitted: boolean = false;
+  private _supplier?: Supplier;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private supplierService: SupplierService,
+    private toastr: ToastrService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    let id;
+    this.dataForm = new FormData();
+    this.route.params.subscribe(param => (id = parseInt(param['id'])));
+    this.supplierService.getById(id).subscribe({
+      next: result => {
+        this._supplier = result;
+        this.supplierForm = this.formBuilder.group({
+          id: [this.supplier?.id],
+          cif_nif: [this.supplier?.cif_nif, Validators.required],
+          name: [this.supplier?.name, [Validators.required, Validators.minLength(3)]],
+          address: [this.supplier?.address, Validators.required],
+          city: [this.supplier?.city, Validators.required],
+          phone: [this.supplier?.phone, Validators.required],
+          email: [this.supplier?.email != 'null' ? this.supplier?.email : ''],
+          web: [this.supplier?.web != 'null' ? this.supplier?.web : ''],
+          notes: [this.supplier?.notes != null ? this.supplier?.notes : ''],
+        });
+        this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
+      },
+      error: error => {
+        this.toastr.error(error ? error : 'Operación no autorizada');
+      },
+    });
+  }
+
+  onSubmit() {
+    this.isSubmitted = true;
+    this.dataForm.append('id', this.supplierForm.get('id')?.value);
+    this.dataForm.append('cif_nif', this.supplierForm.get('cif_nif')?.value);
+    this.dataForm.append('name', this.supplierForm.get('name')?.value);
+    this.dataForm.append('address', this.supplierForm.get('address')?.value);
+    this.dataForm.append('city', this.supplierForm.get('city')?.value);
+    this.dataForm.append('phone', this.supplierForm.get('phone')?.value);
+    this.dataForm.append('email', this.supplierForm.get('email')?.value);
+    this.dataForm.append('web', this.supplierForm.get('web')?.value);
+    this.dataForm.append('notes', this.supplierForm.get('notes')?.value);
+
+    this.supplierService
+      .update(this.dataForm, this.supplierForm.get('id')?.value)
+      .subscribe({
+        next: result => {
+          let res = JSON.parse(JSON.stringify(result));
+          res.error ? this.toastr.error(res.error) : this.toastr.success(res.message);
+          this.router.navigate([this.returnUrl || '/proveedores']);
+        },
+        error: error => {
+          this.toastr.error(error.error ? error.error : 'No se puede conectar con el servidor');
+        },
+      })
+      .add(() => {
+        this.isSubmitted = false;
+      });
+  }
+
+  onChangeInput(event: any) {
+    //TODO
+    let input = event.target.id;
+    this.isSubmitted = true;
+    switch (input) {
+      case 'inputCifNif':
+        this.isSubmitted = this.supplierForm.get(input)?.value !== this.supplier?.cif_nif;
+        break;
+      case 'inputName':
+        this.isSubmitted = this.supplierForm.get(input)?.value !== this.supplier?.name;
+        break;
+      case 'inputAddress':
+        this.isSubmitted = this.supplierForm.get(input)?.value !== this.supplier?.address;
+        break;
+      case 'inputCity':
+        this.isSubmitted = this.supplierForm.get(input)?.value !== this.supplier?.city;
+        break;
+      case 'inputPhone':
+        this.isSubmitted = this.supplierForm.get(input)?.value !== this.supplier?.phone;
+        break;
+      case 'inputEmail':
+        this.isSubmitted = this.supplierForm.get(input)?.value !== this.supplier?.email;
+        break;
+      case 'inputWeb':
+        this.isSubmitted = this.supplierForm.get(input)?.value !== this.supplier?.web;
+        break;
+      case 'inputNotes':
+        this.isSubmitted = this.supplierForm.get(input)?.value !== this.supplier?.notes;
+        break;
+    }
+  }
+
+  get supplierFormControls() {
+    return this.supplierForm.controls;
+  }
+
+  get supplier() {
+    return this._supplier;
+  }
+}

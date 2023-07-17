@@ -30,26 +30,32 @@ import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { PathLocationStrategy, LocationStrategy } from '@angular/common';
 import { HelpComponent } from './components/help/help.component';
+import { SupplierListComponent } from './components/suppliers/list/list.component';
+import { SupplierEditComponent } from './components/suppliers/edit/edit.component';
+import { SupplierAddComponent } from './components/suppliers/add/add.component';
 
 registerLocaleData(localeEs);
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,          //Auth
-    RegisterComponent,       //Auth
-    ProfileComponent,        //Auth
-    NavBarComponent,         //Navigation bar
-    NotFoundComponent,       //404 page
-    HomeComponent,           //Start page
-    ProductListComponent,    //Products
-    ProductEditComponent,    //Products
-    ProductAddComponent,     //Products
-    ConfigListComponent,     //Config
-    ConfigGeneralListComponent,//Config
-    ConfigGeneralEditComponent,//Config
-    RoleListComponent,       //Roles and permissions
-    PermissionsListComponent,//Roles and permissions
-    HelpComponent,            //Help
+    LoginComponent, //Auth
+    RegisterComponent, //Auth
+    ProfileComponent, //Auth
+    NavBarComponent, //Navigation bar
+    NotFoundComponent, //404 page
+    HomeComponent, //Start page
+    ProductListComponent, //Products
+    ProductEditComponent, //Products
+    ProductAddComponent, //Products
+    ConfigListComponent, //Config
+    ConfigGeneralListComponent, //Config
+    ConfigGeneralEditComponent, //Config
+    RoleListComponent, //Roles and permissions
+    PermissionsListComponent, //Roles and permissions
+    HelpComponent, //Help
+    SupplierListComponent, //Supplier
+    SupplierEditComponent, //Supplier
+    SupplierAddComponent, //Supplier
   ],
   imports: [
     BrowserModule,
@@ -65,8 +71,8 @@ registerLocaleData(localeEs);
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: LOCALE_ID, useValue: 'es-ES' },
     Meta,
-    {provide: LocationStrategy, useClass: PathLocationStrategy},
+    { provide: LocationStrategy, useClass: PathLocationStrategy },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 
-class PermissionTableSeeder extends Seeder
+class CreatePermissionTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -35,6 +35,11 @@ class PermissionTableSeeder extends Seeder
            'permission-create',
            'permission-edit',
            'permission-delete',
+
+           'supplier-list',
+           'supplier-create',
+           'supplier-edit',
+           'supplier-delete',
         ];
      
         foreach ($permissions as $permission) {

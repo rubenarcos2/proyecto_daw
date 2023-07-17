@@ -6,6 +6,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\SupplierController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,13 +34,14 @@ Route::group([
 
 //Restricted access only product-list|product-create|product-edit|product-delete user permissions
 Route::group([
-    'middleware' => ['api']
+    'middleware' => 'api',
+    'prefix' => 'product'
 ], function ($router) {
-    Route::get('/product', [ProductController::class, 'index']);
-    Route::get('/product/{id}', [ProductController::class, 'show'])->where('id', '[0-9]+');
-    Route::post('/product/create', [ProductController::class, 'store']);
-    Route::post('/product/delete', [ProductController::class, 'destroy']);
-    Route::post('/product/update', [ProductController::class, 'update']);    
+    Route::get('/', [ProductController::class, 'index']);
+    Route::get('/{id}', [ProductController::class, 'show'])->where('id', '[0-9]+');
+    Route::post('/create', [ProductController::class, 'store']);
+    Route::post('/delete', [ProductController::class, 'destroy']);
+    Route::post('/update', [ProductController::class, 'update']);    
 });
 
 //Restricted access only config-list|config-create|config-edit|config-delete user and general configs
@@ -80,6 +82,20 @@ Route::group([
     Route::get('/user/{id}', [PermissionController::class, 'userPermissions'])->where('id', '[0-9]+');
     Route::post('/user/{id}', [PermissionController::class, 'userAssignRole'])->where('id', '[0-9]+');
 });
+
+//Restricted access only permission-list|permission-create|permission-edit|permission-delete user permissions
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'supplier'
+], function ($router) {
+    Route::get('/', [SupplierController::class, 'index']);
+    Route::get('/all', [SupplierController::class, 'all']);
+    Route::get('/{id}', [SupplierController::class, 'show'])->where('id', '[0-9]+');
+    Route::post('/create', [SupplierController::class, 'create']);
+    Route::post('/update/{id}', [SupplierController::class, 'update'])->where('id', '[0-9]+');
+    Route::post('/delete/{id}', [SupplierController::class, 'delete'])->where('id', '[0-9]+');
+});
+
 
 //Catch error when fail on endpoint
 Route::fallback(function(){

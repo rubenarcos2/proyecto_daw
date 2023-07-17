@@ -11,15 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
+            $table->string('cif_nif', 10)->unique();
             $table->string('name');
-            $table->string('description');
-            $table->unsignedBigInteger('supplier');
-            $table->foreign('supplier')->references('id')->on('suppliers')->onDelete('cascade');
-            $table->text('image');
-            $table->double('price');
-            $table->integer('stock');
+            $table->string('address');
+            $table->string('city');
+            $table->string('phone');
+            $table->string('email')->nullable();
+            $table->string('web')->nullable();
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('suppliers');
     }
 };

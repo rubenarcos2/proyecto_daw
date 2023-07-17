@@ -34,6 +34,29 @@
                 </div>
             </div>
             <div class="mb-3">
+                <label for="inputSupplier" class="form-label">Proveedor</label>
+                <!--<input (change)="onChangeInput($event)" class="form-control" id="inputSupplier"
+                    formControlName="supplier">-->
+                <div>
+                    <select name="select-supplier" id="select-supplier" formControlName="supplier"
+                        (change)="onChangeInput($event)">
+                        <option *ngFor="let supplier of suppliers" value="{{supplier.id}}" id="supplier-{{supplier.id}}"
+                            [selected]="supplier.id == product.supplier">
+                            {{supplier.cif_nif}} - {{supplier.name}}</option>
+                    </select>
+                    &nbsp;
+                    <a href="./proveedores/editar/{{product.supplier}}"><img src="../../assets/img/icons/suppliers.png"
+                            width="32px" height="32px" alt="Ver datos del proveedor"
+                            title="Ver datos del proveedor"></a>
+                    <div class="form-text text-danger"
+                        *ngIf="productFormControls['supplier'].invalid && (productFormControls['supplier'].dirty || productFormControls['supplier'].touched)">
+                        <ng-container *ngIf="productFormControls['supplier'].errors?.['required']">
+                            Introduzca un proveedor para el producto.
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
                 <label for="inputImage" class="form-label">Imagen</label>
                 <input (change)="onChangeFile($event)" type="file" class="form-control" id="inputImage"
                     formControlName="image">

@@ -23,7 +23,9 @@ class CreateEmployeeSeeder extends Seeder
     
         $role = Role::create(['name' => 'Employee']);
      
-        $user->syncPermissions(['product-list', 'product-create', 'product-edit', 'product-delete', 'config-list', 'config-edit']);
+        $user->syncPermissions(['product-list', 'product-create', 'product-edit', 'product-delete', 
+                                'config-list', 'config-edit', 
+                                'supplier-list', 'supplier-create', 'supplier-edit', 'supplier-delete']);
      
         $user->assignRole([$role->id]);
     }
