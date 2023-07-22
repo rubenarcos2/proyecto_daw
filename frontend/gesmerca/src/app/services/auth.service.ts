@@ -34,6 +34,7 @@ export class AuthService {
         let res = JSON.parse(JSON.stringify(result));
         this._user = res.user;
         this._user.permissions = res.permissions;
+        sessionStorage.setItem('permissionUser', JSON.stringify(res.permissions));
         return result;
       })
     );
@@ -45,6 +46,7 @@ export class AuthService {
         let msg = JSON.parse(JSON.stringify(result));
         sessionStorage.removeItem('authUser');
         sessionStorage.removeItem('userConfig');
+        sessionStorage.removeItem('permissionUser');
         this.toastr.info(msg.message);
       })
     );
@@ -64,8 +66,11 @@ export class AuthService {
   }
 
   hasPermission(permission: string) {
-    if (this.user !== undefined) return this._user.permissions?.find(p => p.name == permission);
-    else return false;
+    //if (this.user !== undefined) return this._user.permissions?.find(p => p.name == permission);
+    //else return false;
+    return JSON.parse(sessionStorage.getItem('permissionUser') as string)?.find(
+      (p: { name: string }) => p.name == permission
+    );
   }
 
   get isLoggedIn() {

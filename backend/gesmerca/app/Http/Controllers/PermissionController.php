@@ -14,8 +14,11 @@ class PermissionController extends Controller
      * @return void
      */
     public function __construct() {
-        //$this->middleware('auth:api', ['except' => ['index', 'indexAll', 'users']]);
-        //$this->middleware('permission:permission-list|permission-create|permission-edit|permission-delete', ['except' => ['index', 'indexAll', 'users']]);
+        $this->middleware('auth:api', ['except' => 'index']);
+        $this->middleware('permission:permission-list', ['only' => ['show']]);
+        $this->middleware('permission:permission-create', ['only' => ['store']]);
+        $this->middleware('permission:permission-edit', ['only' => ['userPermissions']]);
+        $this->middleware('permission:permission-delete', ['only' => ['userAssignRole']]);
     }
 
     /**

@@ -24,18 +24,17 @@ export class NavBarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    //The user profile is reloaded because it is necessary to load the user's preferences in case of url change or page update.
-    if (this.authService.isLoggedIn) {
-      this.authService.profile().subscribe();
-      this.configService.getAllConfigsOfUser(this.authService.user.id).subscribe();
-    }
     this.router.events.subscribe(e => {
       if (e instanceof RouterEvent) {
         if (e instanceof RoutesRecognized) {
           this.createBreadcrumb(e.url);
         }
         if (e instanceof NavigationEnd) {
-          this.doc = document;
+          //The user profile is reloaded because it is necessary to load the user's preferences in case of url change or page update.
+          if (this.authService.isLoggedIn) {
+            this.authService.profile().subscribe();
+            //this.configService.getAllConfigsOfUser(this.authService.user.id).subscribe();
+          }
         }
       }
     });
@@ -52,6 +51,7 @@ export class NavBarComponent implements OnInit {
       else this.sharpContrastDeactivate();
     else if (this.configService.hasConfig('sharpcontrast') == 'true') this.sharpContrast();
     else this.sharpContrastDeactivate();
+    this.doc = document;
   }
 
   handleLogout() {

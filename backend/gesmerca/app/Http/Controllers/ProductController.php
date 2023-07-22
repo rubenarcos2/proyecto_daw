@@ -17,7 +17,7 @@ class ProductController extends Controller
      * @return void
      */
     public function __construct() {
-        $this->middleware('auth:api', ['except' => ['index']]);
+        $this->middleware('auth:api', ['except' => 'index']);
         $this->middleware('permission:product-list', ['only' => ['show']]);
         $this->middleware('permission:product-create', ['only' => ['store']]);
         $this->middleware('permission:product-edit', ['only' => ['update']]);

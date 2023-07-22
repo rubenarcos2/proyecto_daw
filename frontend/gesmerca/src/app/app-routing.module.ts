@@ -45,31 +45,37 @@ const routes: Routes = [
     path: 'productos',
     component: ProductListComponent,
     canActivate: [AuthGuard],
+    data: { permission: ['product-list'] },
   },
   {
     path: 'productos/nuevo',
     component: ProductAddComponent,
     canActivate: [AuthGuard],
+    data: { permission: ['product-create'] },
   },
   {
     path: 'productos/editar/:id',
     component: ProductEditComponent,
     canActivate: [AuthGuard],
+    data: { permission: ['product-edit'] },
   },
   {
     path: 'proveedores',
     component: SupplierListComponent,
     canActivate: [AuthGuard],
+    data: { permission: ['supplier-list'] },
   },
   {
     path: 'proveedores/nuevo',
     component: SupplierAddComponent,
     canActivate: [AuthGuard],
+    data: { permission: ['supplier-create'] },
   },
   {
     path: 'proveedores/editar/:id',
     component: SupplierEditComponent,
     canActivate: [AuthGuard],
+    data: { permission: ['supplier-edit'] },
   },
   {
     path: 'config',
@@ -80,21 +86,25 @@ const routes: Routes = [
     path: 'config/general',
     component: ConfigGeneralListComponent,
     canActivate: [AuthGuard],
+    data: { permission: ['config-list'] },
   },
   {
     path: 'config/general/editar/:id',
     component: ConfigGeneralEditComponent,
     canActivate: [AuthGuard],
+    data: { permission: ['config-edit'] },
   },
   {
     path: 'roles',
     component: RoleListComponent,
     canActivate: [AuthGuard],
+    data: { permission: ['role-list'] },
   },
   {
     path: 'permisos',
     component: PermissionsListComponent,
     canActivate: [AuthGuard],
+    data: { permission: ['permission-list'] },
   },
   {
     path: '**',

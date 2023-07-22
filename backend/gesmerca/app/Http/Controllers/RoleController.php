@@ -14,8 +14,11 @@ class RoleController extends Controller
      * @return void
      */
     public function __construct() {
-        //$this->middleware('auth:api', ['except' => ['index', 'indexAll', 'users']]);
-        //$this->middleware('permission:role-list|role-create|role-edit|role-delete', ['except' => ['index', 'indexAll', 'users']]);
+        $this->middleware('auth:api', ['except' => 'index']);
+        $this->middleware('permission:role-list', ['only' => ['show', 'userRole']]);
+        $this->middleware('permission:role-create', ['only' => ['create']]);
+        $this->middleware('permission:role-edit', ['only' => ['update', 'userAssignRole']]);
+        $this->middleware('permission:role-delete', ['only' => ['delete']]);
     }
 
     /**

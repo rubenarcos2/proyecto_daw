@@ -1,5 +1,4 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { ConfigService } from 'src/app/services/config.service';
 import { HelpService } from 'src/app/services/help.service';
 import { Router } from '@angular/router';
 
@@ -16,12 +15,7 @@ export class HelpComponent implements OnInit, OnDestroy {
   protected mp4url: any;
   protected webmurl: any;
 
-  constructor(
-    protected helpService: HelpService,
-    private configService: ConfigService,
-    private router: Router,
-    private el: ElementRef
-  ) {
+  constructor(protected helpService: HelpService, private router: Router, private el: ElementRef) {
     this.element = el.nativeElement;
   }
 
