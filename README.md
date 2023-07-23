@@ -16,9 +16,9 @@ He focalizado la aplicación en los conocimientos adquiridos sobre la gestión d
 I have focused the application on the knowledge acquired on the management of user access privileges to different elements (or modules as I will refer to throughout the document) of the application, the management of hierarchical users in different groups (called roles) and the administration by an authorised user. No less relevant has been the application of knowledge in the design and management of relational databases and their implementation platforms. Another factor taken into account was the security of the environment of use (JWT) and of the application (Angular), implementing functionalities such as the encryption of sensitive data, or the prevention of the use of elements sensitive to the injection of automated information (cracking or brute force attacks).</p>
  
 ## Documentación / Documents
-Lea toda la información disponible antes de utilizar el software en: [https://www.rarcos.com/proyecto-integrado/](https://rarcos.com/2023/06/30/Proyecto_integrado/)
+Lea toda la información disponible antes de utilizar el software en: https://rarcos.com/2023/06/30/Proyecto_integrado/
 
-Read all info before use this software: [https://www.rarcos.com/proyecto-integrado/](https://rarcos.com/2023/06/30/Proyecto_integrado/)
+Read all info before use this software: https://rarcos.com/2023/06/30/Proyecto_integrado/
 
 ## Licencia / License [![License: CC BY-NC-ND 4.0](https://licensebuttons.net/l/by-nc-nd/4.0/80x15.png)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
 
