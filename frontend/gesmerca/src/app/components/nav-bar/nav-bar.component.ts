@@ -1,7 +1,8 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterEvent, RoutesRecognized } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { ConfigService } from 'src/app/services/config.service';
 import { HelpService } from 'src/app/services/help.service';
@@ -11,8 +12,10 @@ import { HelpService } from 'src/app/services/help.service';
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.css'],
 })
-export class NavBarComponent implements OnInit {
+export class NavBarComponent implements OnInit, OnDestroy {
   private doc!: Document;
+  private subs: Subscription = new Subscription();
+  private subs2: Subscription = new Subscription();
 
   constructor(
     protected authService: AuthService,
@@ -32,7 +35,7 @@ export class NavBarComponent implements OnInit {
         if (e instanceof NavigationEnd) {
           //The user profile is reloaded because it is necessary to load the user's preferences in case of url change or page update.
           if (this.authService.isLoggedIn) {
-            this.authService.profile().subscribe();
+            this.subs = this.authService.profile().subscribe();
             //this.configService.getAllConfigsOfUser(this.authService.user.id).subscribe();
           }
         }
@@ -55,7 +58,7 @@ export class NavBarComponent implements OnInit {
   }
 
   handleLogout() {
-    this.authService.logout().subscribe({
+    this.subs2 = this.authService.logout().subscribe({
       next: () => {
         this.router.navigate(['/']);
         //Check user config to if activate sharpcontrast
@@ -188,5 +191,16 @@ export class NavBarComponent implements OnInit {
       }
     }
     ham.style.removeProperty('filter');
+  }
+
+  /**
+   * This function start on destroy event page
+   *
+   * Unsuscribe all observable suscriptions
+   *
+   */
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+    this.subs2.unsubscribe();
   }
 }

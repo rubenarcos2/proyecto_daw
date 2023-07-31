@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { Supplier } from 'src/app/models/supplier';
 import { SupplierService } from 'src/app/services/supplier.service';
 
@@ -10,12 +11,14 @@ import { SupplierService } from 'src/app/services/supplier.service';
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css'],
 })
-export class SupplierEditComponent implements OnInit {
+export class SupplierEditComponent implements OnInit, OnDestroy {
   supplierForm!: FormGroup;
   dataForm!: FormData;
   returnUrl!: string;
   isSubmitted: boolean = false;
   private _supplier?: Supplier;
+  private subs: Subscription = new Subscription();
+  private subs2: Subscription = new Subscription();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -29,7 +32,7 @@ export class SupplierEditComponent implements OnInit {
     let id;
     this.dataForm = new FormData();
     this.route.params.subscribe(param => (id = parseInt(param['id'])));
-    this.supplierService.getById(id).subscribe({
+    this.subs = this.supplierService.getById(id).subscribe({
       next: result => {
         this._supplier = result;
         this.supplierForm = this.formBuilder.group({
@@ -63,7 +66,7 @@ export class SupplierEditComponent implements OnInit {
     this.dataForm.append('web', this.supplierForm.get('web')?.value);
     this.dataForm.append('notes', this.supplierForm.get('notes')?.value);
 
-    this.supplierService
+    this.subs2 = this.supplierService
       .update(this.dataForm, this.supplierForm.get('id')?.value)
       .subscribe({
         next: result => {
@@ -74,14 +77,13 @@ export class SupplierEditComponent implements OnInit {
         error: error => {
           this.toastr.error(error.error ? error.error : 'No se puede conectar con el servidor');
         },
-      })
-      .add(() => {
-        this.isSubmitted = false;
       });
+    this.subs2.add(() => {
+      this.isSubmitted = false;
+    });
   }
 
   onChangeInput(event: any) {
-    //TODO
     let input = event.target.id;
     this.isSubmitted = true;
     switch (input) {
@@ -110,6 +112,17 @@ export class SupplierEditComponent implements OnInit {
         this.isSubmitted = this.supplierForm.get(input)?.value !== this.supplier?.notes;
         break;
     }
+  }
+
+  /**
+   * This function start on destroy event page
+   *
+   * Unsuscribe all observable suscriptions
+   *
+   */
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+    this.subs2.unsubscribe();
   }
 
   get supplierFormControls() {

@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
-import { first } from 'rxjs';
+import { Subscription, first } from 'rxjs';
 import { Supplier } from 'src/app/models/supplier';
 import { SupplierService } from 'src/app/services/supplier.service';
 
 @Component({ templateUrl: 'list.component.html' })
-export class SupplierListComponent implements OnInit {
+export class SupplierListComponent implements OnInit, OnDestroy {
   private _suppliers?: Supplier[];
   private _links?: any[];
+  private subs: Subscription = new Subscription();
+  private subs2: Subscription = new Subscription();
 
   constructor(
     private supplierService: SupplierService,
@@ -17,7 +19,7 @@ export class SupplierListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.supplierService
+    this.subs = this.supplierService
       .getAll()
       .pipe(first())
       .subscribe({
@@ -54,7 +56,7 @@ export class SupplierListComponent implements OnInit {
 
   onChangePagination(event: any): void {
     event.preventDefault();
-    this.supplierService
+    this.subs2 = this.supplierService
       .getAll(event.target.href.split('?')[1])
       .pipe(first())
       .subscribe({
@@ -67,6 +69,17 @@ export class SupplierListComponent implements OnInit {
           this.toastr.error(error ? error : 'No se puede conectar con el servidor');
         },
       });
+  }
+
+  /**
+   * This function start on destroy event page
+   *
+   * Unsuscribe all observable suscriptions
+   *
+   */
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+    this.subs2.unsubscribe();
   }
 
   get suppliers() {

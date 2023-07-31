@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { SupplierService } from 'src/app/services/supplier.service';
 
 @Component({
@@ -9,11 +10,12 @@ import { SupplierService } from 'src/app/services/supplier.service';
   templateUrl: './add.component.html',
   styleUrls: ['./add.component.css'],
 })
-export class SupplierAddComponent implements OnInit {
+export class SupplierAddComponent implements OnInit, OnDestroy {
   protected supplierForm!: FormGroup;
   dataForm!: FormData;
   returnUrl!: string;
   isSubmitted: boolean = false;
+  private subs: Subscription = new Subscription();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -48,21 +50,30 @@ export class SupplierAddComponent implements OnInit {
     this.dataForm.append('email', this.supplierForm.get('email')?.value);
     this.dataForm.append('web', this.supplierForm.get('web')?.value);
     this.dataForm.append('notes', this.supplierForm.get('notes')?.value);
-    this.supplierService
-      .create(this.dataForm)
-      .subscribe({
-        next: result => {
-          let res = JSON.parse(JSON.stringify(result));
-          res.error ? this.toastr.error(res.error) : this.toastr.success(res.message);
-          this.router.navigate([this.returnUrl || '/proveedores']);
-        },
-        error: error => {
-          this.toastr.error(error ? error : 'No se puede conectar con el servidor');
-        },
-      })
-      .add(() => {
-        this.isSubmitted = false;
-      });
+    this.subs = this.supplierService.create(this.dataForm).subscribe({
+      next: result => {
+        let res = JSON.parse(JSON.stringify(result));
+        res.error ? this.toastr.error(res.error) : this.toastr.success(res.message);
+        this.router.navigate([this.returnUrl || '/proveedores']);
+      },
+      error: error => {
+        this.toastr.error(error ? error : 'No se puede conectar con el servidor');
+      },
+    });
+
+    this.subs.add(() => {
+      this.isSubmitted = false;
+    });
+  }
+
+  /**
+   * This function start on destroy event page
+   *
+   * Unsuscribe all observable suscriptions
+   *
+   */
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
 
   get supplierFormControls() {

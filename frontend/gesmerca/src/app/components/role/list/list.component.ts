@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { Role } from 'src/app/models/role';
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
@@ -10,9 +11,12 @@ import { RoleService } from 'src/app/services/role.service';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css'],
 })
-export class RoleListComponent implements OnInit {
+export class RoleListComponent implements OnInit, OnDestroy {
   private _users!: User[];
   private _roles!: Role[];
+  private subs: Subscription = new Subscription();
+  private subs2: Subscription = new Subscription();
+  private subs3: Subscription = new Subscription();
 
   constructor(
     protected authService: AuthService,
@@ -21,7 +25,7 @@ export class RoleListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.authService.getAllUsers().subscribe({
+    this.subs = this.authService.getAllUsers().subscribe({
       next: result => {
         this._users = JSON.parse(JSON.stringify(result));
         this._users.forEach(u => {
@@ -40,7 +44,7 @@ export class RoleListComponent implements OnInit {
         this.toastr.error(error ? error : 'No se puede conectar con el servidor');
       },
     });
-    this.roleService.getAll().subscribe({
+    this.subs2 = this.roleService.getAll().subscribe({
       next: result => {
         this._roles = JSON.parse(JSON.stringify(result));
       },
@@ -67,7 +71,7 @@ export class RoleListComponent implements OnInit {
     if (window.confirm('¿Está seguro que desea cambiar el rol al usuario?')) {
       let param = new FormData();
       param.append('id', roleId);
-      this.roleService.setRoleUser(param, userId).subscribe({
+      this.subs3 = this.roleService.setRoleUser(param, userId).subscribe({
         next: result => {
           let res = JSON.parse(JSON.stringify(result));
           res.error ? this.toastr.error(res.error) : this.toastr.success(res.message);
@@ -77,6 +81,18 @@ export class RoleListComponent implements OnInit {
         },
       });
     }
+  }
+
+  /**
+   * This function start on destroy event page
+   *
+   * Unsuscribe all observable suscriptions
+   *
+   */
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+    this.subs2.unsubscribe();
+    this.subs3.unsubscribe();
   }
 
   get users(): User[] {

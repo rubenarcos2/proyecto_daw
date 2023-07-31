@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Permissions } from '../models/permissions';
+import { Permission } from '../models/permission';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,19 +12,19 @@ export class PermissionService {
 
   constructor(private http: HttpClient) {}
 
-  getAll() {
-    return this.http.get<Permissions[]>(`${this.baseUrl}/permission/`);
+  getAll(): Observable<Permission[]> {
+    return this.http.get<Permission[]>(`${this.baseUrl}/permission/`);
   }
 
-  getById(id: any) {
-    return this.http.get<Permissions>(`${this.baseUrl}/permission/${id}`);
+  getById(id: number): Observable<Permission> {
+    return this.http.get<Permission>(`${this.baseUrl}/permission/${id}`);
   }
 
-  getPermissionsUser(id: any) {
-    return this.http.get<Permissions>(`${this.baseUrl}/permission/user/${id}`);
+  getPermissionsUser(id: any): Observable<Permission> {
+    return this.http.get<Permission>(`${this.baseUrl}/permission/user/${id}`);
   }
 
-  setPermissionsUser(params: any, id: any) {
+  setPermissionsUser(params: any, id: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/permission/user/${id}`, params);
   }
 }

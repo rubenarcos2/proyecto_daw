@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { Permission } from 'src/app/models/permission';
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
@@ -10,9 +11,11 @@ import { PermissionService } from 'src/app/services/permission.service';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css'],
 })
-export class PermissionsListComponent implements OnInit {
+export class PermissionsListComponent implements OnInit, OnDestroy {
   private _users!: User[];
   private _permissions!: Permission[];
+  private subs: Subscription = new Subscription();
+  private subs2: Subscription = new Subscription();
 
   constructor(
     protected authService: AuthService,
@@ -27,7 +30,7 @@ export class PermissionsListComponent implements OnInit {
    *
    */
   ngOnInit(): void {
-    this.authService.getAllUsers().subscribe({
+    this.subs = this.authService.getAllUsers().subscribe({
       next: result => {
         this._users = JSON.parse(JSON.stringify(result));
         this.permissionService.getAll().subscribe({
@@ -104,17 +107,15 @@ export class PermissionsListComponent implements OnInit {
     let btnSave = event.target;
     let cmb = document.getElementById('select-user') as HTMLSelectElement;
     let userId = cmb.value.substring('user-'.length);
-    console.log(userId);
     if (window.confirm('¿Está seguro que desea cambiar el rol al usuario?')) {
       let permListChecked: Array<String> = [];
       this.permissions.forEach(p => {
         let chk = document.getElementById('chk-' + p.id) as HTMLInputElement;
         if (chk.checked) permListChecked.push(chk.value);
       });
-      console.log(JSON.stringify(permListChecked));
       let param = new FormData();
       param.append('permissions', JSON.stringify(permListChecked));
-      this.permissionService.setPermissionsUser(param, userId).subscribe({
+      this.subs2 = this.permissionService.setPermissionsUser(param, userId).subscribe({
         next: result => {
           let res = JSON.parse(JSON.stringify(result));
           res.error ? this.toastr.error(res.error) : this.toastr.success(res.message);
@@ -124,6 +125,17 @@ export class PermissionsListComponent implements OnInit {
         },
       });
     }
+  }
+
+  /**
+   * This function start on destroy event page
+   *
+   * Unsuscribe all observable suscriptions
+   *
+   */
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+    this.subs2.unsubscribe();
   }
 
   get users(): User[] {

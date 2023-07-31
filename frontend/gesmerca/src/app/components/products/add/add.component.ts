@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { Supplier } from 'src/app/models/supplier';
 import { ProductService } from 'src/app/services/product.service';
 import { SupplierService } from 'src/app/services/supplier.service';
@@ -11,12 +12,14 @@ import { SupplierService } from 'src/app/services/supplier.service';
   templateUrl: './add.component.html',
   styleUrls: ['./add.component.css'],
 })
-export class ProductAddComponent implements OnInit {
+export class ProductAddComponent implements OnInit, OnDestroy {
   protected productForm!: FormGroup;
   dataForm!: FormData;
   returnUrl!: string;
   isSubmitted: boolean = false;
   private _suppliers?: Supplier[];
+  private subs: Subscription = new Subscription();
+  private subs2: Subscription = new Subscription();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -37,7 +40,7 @@ export class ProductAddComponent implements OnInit {
       stock: ['', Validators.required],
     });
     this.isSubmitted = true;
-    this.supplierService.getAllNoPaginated().subscribe({
+    this.subs = this.supplierService.getAllNoPaginated().subscribe({
       next: result => {
         let res = JSON.parse(JSON.stringify(result));
         this._suppliers = res;
@@ -55,26 +58,35 @@ export class ProductAddComponent implements OnInit {
     this.dataForm.append('supplier', this.productForm.get('supplier')?.value);
     this.dataForm.append('price', this.productForm.get('price')?.value.replace(/,/g, '.'));
     this.dataForm.append('stock', this.productForm.get('stock')?.value);
-    this.productService
-      .create(this.dataForm)
-      .subscribe({
-        next: result => {
-          let res = JSON.parse(JSON.stringify(result));
-          res.error ? this.toastr.error(res.error) : this.toastr.success(res.message);
-          this.router.navigate([this.returnUrl || '/productos']);
-        },
-        error: error => {
-          this.toastr.error(error ? error : 'No se puede conectar con el servidor');
-        },
-      })
-      .add(() => {
-        this.isSubmitted = false;
-      });
+    this.subs2 = this.productService.create(this.dataForm).subscribe({
+      next: result => {
+        let res = JSON.parse(JSON.stringify(result));
+        res.error ? this.toastr.error(res.error) : this.toastr.success(res.message);
+        this.router.navigate([this.returnUrl || '/productos']);
+      },
+      error: error => {
+        this.toastr.error(error ? error : 'No se puede conectar con el servidor');
+      },
+    });
+    this.subs2.add(() => {
+      this.isSubmitted = false;
+    });
   }
 
   onChangeFile(file: any) {
     this.dataForm.append('image', file.target.files[0], file.name);
     this.isSubmitted = true;
+  }
+
+  /**
+   * This function start on destroy event page
+   *
+   * Unsuscribe all observable suscriptions
+   *
+   */
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+    this.subs2.unsubscribe();
   }
 
   get productFormControls() {

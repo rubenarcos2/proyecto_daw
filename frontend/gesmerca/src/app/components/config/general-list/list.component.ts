@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Config } from 'src/app/models/config';
 import { ConfigService } from 'src/app/services/config.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
-import { first } from 'rxjs';
+import { Subscription, first } from 'rxjs';
 
 @Component({
   templateUrl: 'list.component.html',
   styleUrls: ['./list.component.css'],
 })
-export class ConfigGeneralListComponent implements OnInit {
+export class ConfigGeneralListComponent implements OnInit, OnDestroy {
   private _configs?: Config[];
+  private subs: Subscription = new Subscription();
 
   constructor(
     private configService: ConfigService,
@@ -19,7 +20,7 @@ export class ConfigGeneralListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.configService
+    this.subs = this.configService
       .getAll()
       .pipe(first())
       .subscribe({
@@ -31,6 +32,16 @@ export class ConfigGeneralListComponent implements OnInit {
           this.toastr.error(error ? error : 'No se puede conectar con el servidor');
         },
       });
+  }
+
+  /**
+   * This function start on destroy event page
+   *
+   * Unsuscribe all observable suscriptions
+   *
+   */
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
 
   get configs() {
