@@ -32,4 +32,9 @@ class GoodsReceipt extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function products()
+    {
+        return $this->hasMany(GoodsReceiptProduct::class, 'idgoodsreceipt', 'id');
+    }
 }

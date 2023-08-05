@@ -30,6 +30,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('suppliers');
+        //Schema::dropIfExists('suppliers');
+        DB::statement('drop table suppliers cascade');
+        
     }
 };

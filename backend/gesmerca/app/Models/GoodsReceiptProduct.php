@@ -15,7 +15,9 @@ class GoodsReceiptProduct extends Model
      * @var array
      */
     protected $fillable = [
-        //'id',
+        'id',
+        'idgoodsreceipt',
+        'idproduct',
         'quantity',
         'price',
     ];
@@ -31,12 +33,7 @@ class GoodsReceiptProduct extends Model
     ];
 
     //Relationships Many to Many
-    public function suppliers(){
-        return $this->belongsToMany(Supplier::class, 'goods_receipt_product', 'idsupplier', 'idproduct')->withPivot('quantity', 'price')->withTimestamps();
-    }
-
-    //Relationships Many to Many
     public function products(){
-        return $this->belongsToMany(Product::class, 'goods_receipt_product', 'idsupplier', 'idproduct')->withPivot('quantity', 'price')->withTimestamps();
+        return $this->belongsTo(GoodsReceipt::class)->withPivot('quantity', 'price')->withTimestamps();
     }
 }

@@ -5,7 +5,9 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\GoodsReceipt;
+use App\Models\GoodsReceiptProduct;
 use App\Models\Supplier;
+use App\Models\Product;
 use App\Models\User;
 use Faker\Factory as Faker;
 
@@ -28,7 +30,20 @@ class CreateGoodsReceiptSeeder extends Seeder
                 'date' => $faker->date,
                 'time' => $faker->time,
                 'docnum' => $faker->randomElement(['A', 'B']).$faker->numberBetween($min = 100000000, $max = 999999999),
-            ]);           
+            ]);
+            $productsOfSupplier = Product::all()->where('supplier', $goodReceipt->idsupplier);
+            if(count($productsOfSupplier) > 0){
+                foreach ($productsOfSupplier as $key => $prod) {                
+                    $goodReceiptProduct = GoodsReceiptProduct::create([
+                        'idgoodsreceipt' => $goodReceipt->id,
+                        'idproduct' => $prod->id,
+                        'quantity' => $faker->numberBetween($min = 1, $max = 99),
+                        'price' => $prod->price,
+                    ]);
+                };
+            }else{
+                $goodReceipt->delete();
+            }
         }
     }
 }

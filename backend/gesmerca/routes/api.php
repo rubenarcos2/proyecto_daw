@@ -7,6 +7,7 @@ use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\GoodsReceiptController;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,7 +84,7 @@ Route::group([
     Route::post('/user/{id}', [PermissionController::class, 'userAssignRole'])->where('id', '[0-9]+');
 });
 
-//Restricted access only permission-list|permission-create|permission-edit|permission-delete user permissions
+//Restricted access only supplier-list|supplier-create|supplier-edit|supplier-delete user suppliers
 Route::group([
     'middleware' => 'api',
     'prefix' => 'supplier'
@@ -96,6 +97,20 @@ Route::group([
     Route::post('/delete/{id}', [SupplierController::class, 'delete'])->where('id', '[0-9]+');
 });
 
+//Restricted access only goodsreceipt-list|goodsreceipt-create|goodsreceipt-edit|goodsreceipt-delete user goodsreceipts
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'goodsreceipt'
+], function ($router) {
+    Route::get('/', [GoodsReceiptController::class, 'index']);
+    Route::get('/{id}', [GoodsReceiptController::class, 'show'])->where('id', '[0-9]+');
+    Route::get('/{id}/products', [GoodsReceiptController::class, 'products'])->where('id', '[0-9]+');
+    Route::post('/{id}/product/add', [GoodsReceiptController::class, 'addProduct'])->where('id', '[0-9]+');
+    Route::post('/{id}/product/delete', [GoodsReceiptController::class, 'deleteProduct'])->where('id', '[0-9]+');
+    Route::post('/create', [GoodsReceiptController::class, 'create']);
+    Route::post('/update/{id}', [GoodsReceiptController::class, 'update'])->where('id', '[0-9]+');
+    Route::post('/delete/{id}', [GoodsReceiptController::class, 'delete'])->where('id', '[0-9]+');
+});
 
 //Catch error when fail on endpoint
 Route::fallback(function(){

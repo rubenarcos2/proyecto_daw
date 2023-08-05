@@ -18,6 +18,7 @@ class Product extends Model
         'id',
         'name',
         'description',
+        'supplier',
         'image',
         'price',
         'stock'
@@ -32,4 +33,9 @@ class Product extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function supplier()
+    {
+        return $this->hasMany(Supplier::class, 'id', 'supplier');
+    }
 }

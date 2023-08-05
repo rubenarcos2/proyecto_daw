@@ -40,6 +40,11 @@ class CreatePermissionTableSeeder extends Seeder
            'supplier-create',
            'supplier-edit',
            'supplier-delete',
+           
+           'goodsreceipt-list',
+           'goodsreceipt-create',
+           'goodsreceipt-edit',
+           'goodsreceipt-delete',
         ];
      
         foreach ($permissions as $permission) {
