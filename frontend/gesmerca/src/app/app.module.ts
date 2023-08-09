@@ -26,13 +26,16 @@ import { ConfigGeneralEditComponent } from './components/config/edit/edit.compon
 import { RoleListComponent } from './components/role/list/list.component';
 import { PermissionsListComponent } from './components/permissions/list/list.component';
 
-import { registerLocaleData } from '@angular/common';
+import { DatePipe, registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { PathLocationStrategy, LocationStrategy } from '@angular/common';
 import { HelpComponent } from './components/help/help.component';
 import { SupplierListComponent } from './components/suppliers/list/list.component';
 import { SupplierEditComponent } from './components/suppliers/edit/edit.component';
 import { SupplierAddComponent } from './components/suppliers/add/add.component';
+import { GoodsReceiptListComponent } from './components/goodsreceipt/list/list.component';
+import { GoodsReceiptAddComponent } from './components/goodsreceipt/add/add.component';
+import { GoodsReceiptEditComponent } from './components/goodsreceipt/edit/edit.component';
 
 registerLocaleData(localeEs);
 @NgModule({
@@ -56,6 +59,9 @@ registerLocaleData(localeEs);
     SupplierListComponent, //Supplier
     SupplierEditComponent, //Supplier
     SupplierAddComponent, //Supplier
+    GoodsReceiptListComponent, //Goods Receipt
+    GoodsReceiptAddComponent, //Goods Receipt
+    GoodsReceiptEditComponent, //Goods Receipt
   ],
   imports: [
     BrowserModule,
@@ -72,6 +78,7 @@ registerLocaleData(localeEs);
     { provide: LOCALE_ID, useValue: 'es-ES' },
     Meta,
     { provide: LocationStrategy, useClass: PathLocationStrategy },
+    DatePipe,
   ],
   bootstrap: [AppComponent],
 })

@@ -22,6 +22,9 @@ import { PermissionsListComponent } from './components/permissions/list/list.com
 import { SupplierListComponent } from './components/suppliers/list/list.component';
 import { SupplierAddComponent } from './components/suppliers/add/add.component';
 import { SupplierEditComponent } from './components/suppliers/edit/edit.component';
+import { GoodsReceiptListComponent } from './components/goodsreceipt/list/list.component';
+import { GoodsReceiptAddComponent } from './components/goodsreceipt/add/add.component';
+import { GoodsReceiptEditComponent } from './components/goodsreceipt/edit/edit.component';
 
 const routes: Routes = [
   {
@@ -76,6 +79,24 @@ const routes: Routes = [
     component: SupplierEditComponent,
     canActivate: [AuthGuard],
     data: { permission: ['supplier-edit'] },
+  },
+  {
+    path: 'recepcion',
+    component: GoodsReceiptListComponent,
+    canActivate: [AuthGuard],
+    data: { permission: ['goodsreceipt-list'] },
+  },
+  {
+    path: 'recepcion/nuevo',
+    component: GoodsReceiptAddComponent,
+    canActivate: [AuthGuard],
+    data: { permission: ['goodsreceipt-create'] },
+  },
+  {
+    path: 'recepcion/editar/:id',
+    component: GoodsReceiptEditComponent,
+    canActivate: [AuthGuard],
+    data: { permission: ['goodsreceipt-edit'] },
   },
   {
     path: 'config',

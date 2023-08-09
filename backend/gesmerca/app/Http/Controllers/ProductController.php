@@ -53,6 +53,19 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * Display a listing of the all products.
+     */
+    public function all()
+    {
+        try{
+            $products = Product::all();
+            return response()->json($products);
+        }catch(\Exception $e){
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+
     public function show($id){
         try{
             $product = Product::find($id);

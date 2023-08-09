@@ -173,13 +173,13 @@ class GoodsReceiptController extends Controller
                 'docnum' => 'required',
             ]);
         
-            $goodReceipt = Supplier::find($id);
+            $goodReceipt = GoodsReceipt::find($id);
             $goodReceipt->idsupplier = $request->idsupplier;
             $goodReceipt->iduser = $request->iduser;
             $goodReceipt->date = $request->date;
             $goodReceipt->time = $request->time;
             $goodReceipt->docnum = $request->docnum;
-            $supplier->save();
+            $goodReceipt->save();
             
             return response()->json(['message' => 'Se ha actualizado el albarán de recepción de mercancía correctamente correctamente']);
         }catch(\Exception $e){

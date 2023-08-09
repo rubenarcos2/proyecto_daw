@@ -10,7 +10,7 @@
             <th>Descripción</th>
             <th>Precio</th>
             <th>Stock</th>
-            <th *ngIf="authService.hasRole('Admin') || authService.hasRole('Employee')"></th>
+            <th *ngIf="authService.hasPermission('product-edit') && authService.hasPermission('product-delete')"></th>
         </tr>
     </thead>
     <tbody>
@@ -22,7 +22,7 @@
             <td>{{product.description}}</td>
             <td>{{product.price | currency: 'EUR'}}</td>
             <td>{{product.stock}}</td>
-            <td *ngIf="authService.hasRole('Admin') || authService.hasRole('Employee')">
+            <td *ngIf="authService.hasPermission('product-edit') && authService.hasPermission('product-delete')">
                 <a *ngIf="authService.hasPermission('product-edit')" routerLink="editar/{{product.id}}"
                     class="btn btn-sm btn-primary me-1">Editar</a>
                 <button *ngIf="authService.hasPermission('product-delete')"

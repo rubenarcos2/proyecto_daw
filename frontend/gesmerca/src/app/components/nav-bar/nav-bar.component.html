@@ -21,6 +21,12 @@
                 src="../../assets/img/icons/suppliers.png" width="32" height="32" alt="Proveedores">
               Proveedores</a>
           </li>
+          <li class="nav-item" title="Recepción de mercancía">
+            <a *ngIf="authService.isLoggedIn && authService.hasPermission('goodsreceipt-list')"
+              [routerLink]="['/recepcion']" [routerLinkActive]="'active'" class="nav-link"><img
+                src="../../assets/img/icons/goodsreceipt.png" width="32" height="32" alt="Recepción de mercancía">
+              Recepción de mercancía</a>
+          </li>
           <li class="nav-item" title="Configuración">
             <a *ngIf="authService.isLoggedIn && authService.hasRole('Admin')" [routerLink]="['/config/general']"
               [routerLinkActive]="'active'" class="nav-link"><img src="../../assets/img/icons/settings.png" width="32"

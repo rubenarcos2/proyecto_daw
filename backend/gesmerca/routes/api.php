@@ -40,6 +40,7 @@ Route::group([
 ], function ($router) {
     Route::get('/', [ProductController::class, 'index']);
     Route::get('/{id}', [ProductController::class, 'show'])->where('id', '[0-9]+');
+    Route::get('/all', [ProductController::class, 'all']);
     Route::post('/create', [ProductController::class, 'store']);
     Route::post('/delete', [ProductController::class, 'destroy']);
     Route::post('/update', [ProductController::class, 'update']);    
