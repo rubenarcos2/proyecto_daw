@@ -2,11 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClient, HttpHandler } from '@angular/common/http';
-import { SupplierAddComponent } from './add.component';
+import { ProductAddComponent } from './add.component';
 
 describe('ProductAddComponent', () => {
-  let component: SupplierAddComponent;
-  let fixture: ComponentFixture<SupplierAddComponent>;
+  let component: ProductAddComponent;
+  let fixture: ComponentFixture<ProductAddComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -17,11 +17,11 @@ describe('ProductAddComponent', () => {
           positionClass: 'toast-top-right',
         }),
       ],
-      declarations: [SupplierAddComponent],
+      declarations: [ProductAddComponent],
       providers: [HttpClient, HttpHandler],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SupplierAddComponent);
+    fixture = TestBed.createComponent(ProductAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -30,7 +30,7 @@ class GoodsReceiptController extends Controller
         try{
             App::setLocale('es');
             session()->put('locale', 'es');  
-            $goodReceipts = GoodsReceipt::orderBy('updated_at', 'desc')->paginate(8);
+            $goodReceipts = GoodsReceipt::orderBy('date', 'desc')->paginate(8);
             return response()->json($goodReceipts);
         }catch(\Exception $e){
             return response()->json(['error' => $e->getMessage()]);
@@ -149,7 +149,7 @@ class GoodsReceiptController extends Controller
                 'docnum' => $request->docnum,
             ]);
 
-            return response()->json(['message' => 'Se ha creado el albarán de recepción de mercancía correctamente']);
+            return response()->json(['message' => 'Se ha creado el albarán de recepción de mercancía correctamente', 'id' => $goodReceipt->id]);
         }catch(\Exception $e){
             return response()->json(['error' => $e->getMessage()]);
         }

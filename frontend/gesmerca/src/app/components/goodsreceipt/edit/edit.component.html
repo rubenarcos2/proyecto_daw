@@ -12,7 +12,7 @@
                     </ng-container>
                 </div>
             </div>
-            <div class="twocolumns">
+            <div class="twocolumns mb-3">
                 <div>
                     <label for="inputSupplier" class="form-label">Proveedor</label>
                     <div>
@@ -31,7 +31,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- TODO: get user name from user id -->
                 <div>
                     <label for="inputUser" class="form-label">Usuario</label>
                     <input (change)="onChangeInput($event)" type="text" class="form-control" id="inputUser"
@@ -44,7 +43,7 @@
                     </div>
                 </div>
             </div>
-            <div class="twocolumns">
+            <div class="twocolumns mb-3">
                 <div>
                     <label for="inputDate" class="form-label">Fecha</label>
                     <input (change)="onChangeInput($event)" type="date" class="form-control" id="inputDate"
@@ -106,7 +105,7 @@
                     </tr>
                 </tbody>
             </table>
-            <form id="productForm" [formGroup]="goodsReceiptProductForm" (ngSubmit)="onSubmitProduct()">
+            <form class="mb-3" id="productForm" [formGroup]="goodsReceiptProductForm" (ngSubmit)="onSubmitProduct()">
                 <select name="select-product" id="select-product" formControlName="idproduct">
                     <option *ngFor="let product of products" value="{{product.id}}">
                         {{product.name}}</option>
@@ -116,7 +115,8 @@
                 <button class="btn btn-primary btn-sm" type="submit">Añadir</button>
             </form>
             <br>
-            <button type="submit" class="btn btn-primary">Enviar</button>
+            <button type="submit" class="btn btn-primary"
+                [disabled]="!goodsReceiptForm.valid || !isSubmitted">Enviar</button>
         </form>
     </div>
 </div>

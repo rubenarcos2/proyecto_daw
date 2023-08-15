@@ -10,7 +10,6 @@
             <th>Proveedor</th>
             <th>Usuario</th>
             <th>Fecha</th>
-            <th>Hora</th>
             <th></th>
         </tr>
     </thead>
@@ -23,7 +22,6 @@
             <td><span *ngIf="!goodsreceipt.userName" class="spinner-border spinner-border-sm"></span>
                 {{goodsreceipt.userName}}</td>
             <td>{{goodsreceipt.date | date: 'dd/MM/yyyy'}}</td>
-            <td>{{goodsreceipt.time}}</td>
             <td>
                 <a *ngIf="authService.hasPermission('goodsreceipt-edit')" routerLink="editar/{{goodsreceipt.id}}"
                     class="btn btn-sm btn-primary me-1">Ver/Editar</a>

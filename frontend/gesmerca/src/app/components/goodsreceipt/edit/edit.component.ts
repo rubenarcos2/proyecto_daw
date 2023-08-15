@@ -60,10 +60,10 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
       next: result => {
         this._goodsReceipt = result;
 
-        this.subs2 = this.supplierService.getById(this.goodsReceipt?.idsupplier).subscribe({
+        this.subs = this.supplierService.getById(this.goodsReceipt?.idsupplier).subscribe({
           next: result => {
             this._goodsReceipt!.supplierName = result.name;
-            this.subs5 = this.authService.getAllUsers().subscribe({
+            this.subs2 = this.authService.getAllUsers().subscribe({
               next: result => {
                 let res = JSON.parse(JSON.stringify(result));
                 let users: User[] = res;
@@ -81,7 +81,7 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
                     this.goodsReceipt?.date,
                     [
                       Validators.required,
-                      Validators.pattern(/^(|[0-9])[0-9]\/[0-9][0-9]\/[0-9][0-9]$/),
+                      Validators.pattern(/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/),
                     ],
                   ],
                   time: [
@@ -126,8 +126,6 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
               let res = JSON.parse(JSON.stringify(result));
               e.nameproduct = res.name;
               this._products = this._products?.filter(el => el.id !== e.idproduct);
-              if (this.products?.length == 0)
-                document.getElementsByTagName('form')[1]?.setAttribute('hidden', 'true');
             },
             error: error => {
               this.toastr.error(error ? error : 'Operación no autorizada');
@@ -144,6 +142,8 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
         let res = JSON.parse(JSON.stringify(result));
         this._products = res;
         this._products = this._products?.filter(e => e.supplier == this.goodsReceipt?.idsupplier);
+        if (this.products?.length == 0)
+          document.getElementsByTagName('form')[1]?.setAttribute('hidden', 'true');
       },
       error: error => {
         this.toastr.error(error ? error : 'Operación no autorizada');
@@ -187,7 +187,10 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
       (document.getElementById('select-product') as HTMLSelectElement).value
     );
     this.dataProductForm.append('quantity', this.goodsReceiptProductForm.get('quantity')?.value);
-    this.dataProductForm.append('price', this.goodsReceiptProductForm.get('price')?.value);
+    this.dataProductForm.append(
+      'price',
+      this.goodsReceiptProductForm.get('price')?.value.replace(/,/g, '.')
+    );
     this.subs7 = this.goodsReceiptService
       .addProduct(this.dataProductForm, this.goodsReceipt?.id)
       .subscribe({
@@ -210,30 +213,14 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
     this.isSubmitted = true;
     switch (input) {
       case 'inputDocNum':
-        this.isSubmitted = this.goodsReceiptForm.get(input)?.value !== this.goodsReceipt?.docnum;
-        break;
-      case 'inputSupplier':
-        this.isSubmitted =
-          this.goodsReceiptForm.get(input)?.value !== this.goodsReceipt?.idsupplier;
-        break;
-      case 'inputUser':
-        this.isSubmitted = this.goodsReceiptForm.get(input)?.value !== this.goodsReceipt?.iduser;
+        this.isSubmitted = this.goodsReceiptForm.get('docnum')?.value !== this.goodsReceipt?.docnum;
         break;
       case 'inputDate':
-        this.isSubmitted = this.goodsReceiptForm.get(input)?.value !== this.goodsReceipt?.date;
+        this.isSubmitted = this.goodsReceiptForm.get('date')?.value !== this.goodsReceipt?.date;
         break;
       case 'inputTime':
-        this.isSubmitted = this.goodsReceiptForm.get(input)?.value !== this.goodsReceipt?.time;
+        this.isSubmitted = this.goodsReceiptForm.get('time')?.value !== this.goodsReceipt?.time;
         break;
-    }
-  }
-
-  onChangeCmbSupplier(event: any) {
-    let sel = event.target as HTMLSelectElement;
-    for (let i = 0; i < sel.options.length; i++) {
-      if (Number(sel.options[i].value) == this.goodsReceipt?.idsupplier) {
-        sel.options[i].selected = true;
-      }
     }
   }
 
