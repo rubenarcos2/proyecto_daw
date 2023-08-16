@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -25,6 +25,8 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
   dataProductForm!: FormData;
   isSubmitted: boolean = false;
   isLoaded: boolean = false;
+  today = new Date().toJSON().split('T')[0];
+
   private _products?: Product[];
   private _goodsReceipt?: GoodsReceipt;
   private _goodsReceiptProducts?: GoodsReceiptProduct[];
@@ -77,13 +79,7 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
                   suppliername: [this.goodsReceipt?.supplierName],
                   iduser: [this.goodsReceipt?.iduser, Validators.required],
                   username: [this.goodsReceipt?.userName],
-                  date: [
-                    this.goodsReceipt?.date,
-                    [
-                      Validators.required,
-                      Validators.pattern(/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/),
-                    ],
-                  ],
+                  date: [this.goodsReceipt?.date, [this.dateValidator, Validators.required]],
                   time: [
                     this.goodsReceipt?.time,
                     [
@@ -222,6 +218,18 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
         this.isSubmitted = this.goodsReceiptForm.get('time')?.value !== this.goodsReceipt?.time;
         break;
     }
+  }
+
+  dateValidator(control: FormControl): { [key: string]: any } | null {
+    if (control.value) {
+      let date = control.value;
+      let today = new Date().toJSON().split('T')[0];
+
+      if (new Date(date) > new Date(today)) {
+        return { invalidDate: true };
+      }
+    }
+    return null;
   }
 
   changeFormatDate(date: string): any {

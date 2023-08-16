@@ -50,12 +50,15 @@
             <div class="twocolumns mb-3">
                 <div>
                     <label for="inputDate" class="form-label">Fecha</label>
-                    <input (change)="onChangeInput($event)" type="date" class="form-control" id="inputDate"
-                        formControlName="date">
+                    <input (change)="onChangeInput($event)" type="date" [max]="today" class="form-control"
+                        id="inputDate" formControlName="date">
                     <div class="form-text text-danger"
                         *ngIf="goodsReceiptFormControls['date'].invalid && (goodsReceiptFormControls['date'].dirty || goodsReceiptFormControls['date'].touched)">
                         <ng-container *ngIf="goodsReceiptFormControls['date'].errors?.['required']">
                             Introduzca una fecha de recepción del el albarán de control de mercancías.
+                        </ng-container>
+                        <ng-container *ngIf="goodsReceiptFormControls['date'].errors?.['invalidDate']">
+                            Introduzca una fecha inferior o igual al día de hoy.
                         </ng-container>
                     </div>
                 </div>
@@ -115,7 +118,7 @@
             </form>
             <br>
             <button type="submit" class="btn btn-primary"
-                [disabled]="(!goodsReceiptForm.valid && !goodsReceiptProductForm.valid) || !isSubmitted">Enviar</button>
+                [disabled]="(!goodsReceiptForm.valid || !goodsReceiptProductForm.valid) || !isSubmitted">Enviar</button>
         </form>
     </div>
 </div>

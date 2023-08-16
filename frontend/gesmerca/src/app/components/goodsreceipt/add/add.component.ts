@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -26,6 +26,7 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
   dataProductForm!: FormData;
   isSubmitted: boolean = false;
   isLoaded: boolean = false;
+  today = new Date().toJSON().split('T')[0];
 
   private _user?: User;
   private _suppliers?: Supplier[];
@@ -67,7 +68,7 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
       username: [this._user?.name],
       date: [
         this.datePipe.transform(new Date(), 'YYYY-MM-dd'),
-        [Validators.required, Validators.pattern(/^(|[0-9])[0-9]\/[0-9][0-9]\/[0-9][0-9]$/)],
+        [this.dateValidator, Validators.required],
       ],
       time: [
         this.datePipe.transform(new Date(), 'HH:mm:ss'),
@@ -202,18 +203,27 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
     this.isSubmitted = true;
     switch (input) {
       case 'inputDocNum':
-        this.isSubmitted = this.goodsReceiptForm.get(input)?.value !== this.goodsReceipt?.docnum;
-        break;
-      case 'inputUser':
-        this.isSubmitted = this.goodsReceiptForm.get(input)?.value !== this.goodsReceipt?.iduser;
+        this.isSubmitted = this.goodsReceiptForm.get('docnum')?.value !== this.goodsReceipt?.docnum;
         break;
       case 'inputDate':
-        this.isSubmitted = this.goodsReceiptForm.get(input)?.value !== this.goodsReceipt?.date;
+        this.isSubmitted = this.goodsReceiptForm.get('date')?.value !== this.goodsReceipt?.date;
         break;
       case 'inputTime':
-        this.isSubmitted = this.goodsReceiptForm.get(input)?.value !== this.goodsReceipt?.time;
+        this.isSubmitted = this.goodsReceiptForm.get('time')?.value !== this.goodsReceipt?.time;
         break;
     }
+  }
+
+  dateValidator(control: FormControl): { [key: string]: any } | null {
+    if (control.value) {
+      let date = control.value;
+      let today = new Date().toJSON().split('T')[0];
+
+      if (new Date(date) > new Date(today)) {
+        return { invalidDate: true };
+      }
+    }
+    return null;
   }
 
   changeFormatDate(date: string): any {
