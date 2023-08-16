@@ -245,6 +245,10 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
     ) {
       let dataDeleteProdForm = new FormData();
       dataDeleteProdForm.append('idgoodsreceiptproduct', id);
+      dataDeleteProdForm.append(
+        'quantity',
+        String(this.goodsReceiptProducts?.find(e => e.id == id)?.quantity)
+      );
       this.subs2 = this.goodsReceiptService.deleteProduct(dataDeleteProdForm, id).subscribe({
         next: result => {
           let msg = JSON.parse(JSON.stringify(result));

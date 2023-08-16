@@ -90,6 +90,11 @@ class GoodsReceiptController extends Controller
                     'quantity' => $request->quantity,
                     'price' => $request->price,
                 ]);
+
+                //Increment product stock
+                $product = Product::find($request->idproduct);
+                $product->stock += $request->quantity;
+                $product->save();
     
                 return response()->json(['message' => 'Se ha añadido el producto al albarán de recepción de mercancía correctamente']);
             }else
@@ -112,10 +117,16 @@ class GoodsReceiptController extends Controller
         try{
             $this->validate($request, [
                 'idgoodsreceiptproduct' => 'required',
+                'quantity' => 'required',
             ]);
         
             $goodReceiptProduct = GoodsReceiptProduct::find($request->idgoodsreceiptproduct);
             $goodReceiptProduct->delete();
+
+            //Increment product stock
+            $product = Product::find($goodReceiptProduct->idproduct);
+            $product->stock -= $request->quantity;
+            $product->save();
 
             return response()->json(['message' => 'Se ha eliminado el producto del albarán de recepción de mercancía correctamente']);
         }catch(\Exception $e){
