@@ -23,6 +23,7 @@ class CreateGoodsReceiptSeeder extends Seeder
         $users = User::all();
         $suppliers = Supplier::all();
 
+        /*
         for ($i=0; $i < $faker->numberBetween($min = 1, $max = count($suppliers)-1); $i++) { 
             $goodReceipt = GoodsReceipt::create([
                 'idsupplier' => $suppliers[$faker->numberBetween($min = 1, $max = count($suppliers)-1)]->id,
@@ -41,6 +42,30 @@ class CreateGoodsReceiptSeeder extends Seeder
                         'price' => $prod->price,
                     ]);
                 };
+            }else{
+                $goodReceipt->delete();
+            }
+        }
+        */
+
+        for ($i=0; $i < 1000; $i++) { 
+            $goodReceipt = GoodsReceipt::create([
+                'idsupplier' => $suppliers[$faker->numberBetween($min = 1, $max = count($suppliers)-1)]->id,
+                'iduser' => $faker->numberBetween($min = 1, $max = count($users)-1),
+                'date' => $faker->date,
+                'time' => $faker->time,
+                'docnum' => $faker->randomElement(['A', 'B']).$faker->numberBetween($min = 100000000, $max = 999999999),
+            ]);
+            $productsOfSupplier = Product::all()->where('supplier', $goodReceipt->idsupplier);
+            if(count($productsOfSupplier) > 0){
+                foreach($productsOfSupplier as $prod){
+                    $goodReceiptProduct = GoodsReceiptProduct::create([
+                        'idgoodsreceipt' => $goodReceipt->id,
+                        'idproduct' => $prod->id,
+                        'quantity' => $faker->numberBetween($min = 1, $max = 99),
+                        'price' =>$faker->numberBetween($min = 1, $max = 999),
+                    ]);
+                }
             }else{
                 $goodReceipt->delete();
             }

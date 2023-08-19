@@ -36,6 +36,7 @@ import { SupplierAddComponent } from './components/suppliers/add/add.component';
 import { GoodsReceiptListComponent } from './components/goodsreceipt/list/list.component';
 import { GoodsReceiptAddComponent } from './components/goodsreceipt/add/add.component';
 import { GoodsReceiptEditComponent } from './components/goodsreceipt/edit/edit.component';
+import { CheckSessionComponent } from './components/check-session/check-session.component';
 
 registerLocaleData(localeEs);
 @NgModule({
@@ -62,6 +63,7 @@ registerLocaleData(localeEs);
     GoodsReceiptListComponent, //Goods Receipt
     GoodsReceiptAddComponent, //Goods Receipt
     GoodsReceiptEditComponent, //Goods Receipt
+    CheckSessionComponent, //Check session
   ],
   imports: [
     BrowserModule,

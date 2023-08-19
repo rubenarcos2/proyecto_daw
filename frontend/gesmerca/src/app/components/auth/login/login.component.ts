@@ -27,6 +27,13 @@ export class LoginComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    let expired;
+    this.route.queryParams.subscribe(param => (expired = param['expired']));
+    if (expired) {
+      document.getElementsByTagName('h2')[0].textContent = 'La sesión ha expirado';
+      document.getElementsByTagName('h5')[0].textContent = 'Por favor, identifíquese de nuevo';
+    }
+
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],

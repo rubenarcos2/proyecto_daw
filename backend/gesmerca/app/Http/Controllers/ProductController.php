@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use App\Models\Product;
+use App\Models\GoodsReceiptProduct;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Support\Jsonable;
@@ -69,6 +71,11 @@ class ProductController extends Controller
     public function show($id){
         try{
             $product = Product::find($id);
+
+            $product->priceMin = $this->getPriceMin($id);
+            $product->priceMax = $this->getPriceMax($id);
+            $product->priceAvg = $this->getPriceAvg($id);
+            $product->priceEst = $this->getPriceEst($id, $product->stock, $product->created_at);
             if (empty($product))
                 return response()->json(['error' => 'No existe un producto para el id dado']);
             else
@@ -255,5 +262,32 @@ class ProductController extends Controller
         }catch(\Exception $e){
             throw $e;
         }
+    }
+
+    private function getPriceMin($idproduct){
+        return GoodsReceiptProduct::where('idproduct', $idproduct)->select('price')->orderBy('price', 'asc')->first()->price;        
+    }
+    
+    private function getPriceMax($idproduct){
+        return GoodsReceiptProduct::where('idproduct', $idproduct)->select('price')->orderBy('price', 'desc')->first()->price;        
+    }
+    
+    private function getPriceAvg($idproduct){
+        $grp = GoodsReceiptProduct::where('idproduct', $idproduct);        
+        return round($grp->avg('price'),2);
+    }
+
+    /**
+     * Connect to external API wich content an AI process to estimate the next purchase price
+     * 
+     * Only enable on production server
+     */    
+    private function getPriceEst($idproduct, $stock, $created_at){
+        $response = Http::post('https://vps.rarcos.com:10450', [
+            "idproduct" => $idproduct,
+            "quantity" => $stock,
+            "created_at" => $created_at
+        ]);
+        return $response['price'];
     }
 }

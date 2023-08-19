@@ -41,14 +41,18 @@
     padding: 0px;
     margin-left: -50%;
     margin-right: -50%;
-  }
-
-  .mb-3 {
     grid-template-columns: 3rem 5rem auto 3rem;
   }
 
   .table {
     margin-left: -50%;
+  }
+
+  #productForm {
+    display: grid;
+    grid-template-columns: 30% 20% auto;
+    grid-template-rows: auto auto;
+    gap: 1.2rem;
   }
 }
 
@@ -59,13 +63,17 @@
     padding: 0px;
     margin-left: -50%;
     margin-right: -50%;
-  }
-
-  .mb-3 {
     grid-template-columns: 3rem 5rem auto 3rem;
   }
 
   .table {
     margin-left: -50%;
+  }
+
+  #productForm {
+    display: grid;
+    grid-template-columns: 30% 20% auto;
+    grid-template-rows: auto auto;
+    gap: 1.2rem;
   }
 }

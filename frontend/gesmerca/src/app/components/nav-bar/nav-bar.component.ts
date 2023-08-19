@@ -4,6 +4,7 @@ import { NavigationEnd, Router, RouterEvent, RoutesRecognized } from '@angular/r
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
+import { CheckSessionService } from 'src/app/services/check-session.service';
 import { ConfigService } from 'src/app/services/config.service';
 import { HelpService } from 'src/app/services/help.service';
 
@@ -14,6 +15,7 @@ import { HelpService } from 'src/app/services/help.service';
 })
 export class NavBarComponent implements OnInit, OnDestroy {
   private doc!: Document;
+  private timer: any;
   private subs: Subscription = new Subscription();
   private subs2: Subscription = new Subscription();
 
@@ -21,6 +23,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
     protected authService: AuthService,
     private configService: ConfigService,
     protected helpService: HelpService,
+    protected checkSessionService: CheckSessionService,
     private toastr: ToastrService,
     private router: Router,
     @Inject(DOCUMENT) private document: any
@@ -36,7 +39,10 @@ export class NavBarComponent implements OnInit, OnDestroy {
           //The user profile is reloaded because it is necessary to load the user's preferences in case of url change or page update.
           if (this.authService.isLoggedIn) {
             this.subs = this.authService.profile().subscribe();
-            //this.configService.getAllConfigsOfUser(this.authService.user.id).subscribe();
+            //Check each 15 minutes if user is active
+            this.timer = setInterval(() => {
+              this.checkSessionService.open('checkSession-modal');
+            }, 900000);
           }
         }
       }

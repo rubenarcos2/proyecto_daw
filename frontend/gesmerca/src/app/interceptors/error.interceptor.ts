@@ -16,9 +16,9 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.isLoggedOut = true;
           //Local logout if 400 expired session response returned from api
           if (error?.status === 400) {
-            localStorage.removeItem('authUser');
-            location.replace('/login');
-            return throwError(() => 'Usuario no autorizado');
+            sessionStorage.clear();
+            location.replace('/login?expired=true');
+            return throwError(() => 'Ha expirado la sesión');
           }
           //Auto logout if 401 Unauthorized or 403 Forbidden response returned from api
           if (error?.status === 401 || error?.status === 403) {
@@ -27,7 +27,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                 location.replace('/login');
               },
               error: error => {
-                localStorage.removeItem('authUser');
+                sessionStorage.clear();
                 return throwError(() => error?.error?.error);
               },
             });

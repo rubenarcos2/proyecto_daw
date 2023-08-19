@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HelpComponent } from '../components/help/help.component';
+import { CheckSessionComponent } from '../components/check-session/check-session.component';
 
 @Injectable({
   providedIn: 'root',
 })
-export class HelpService {
-  private modals: HelpComponent[] = [];
+export class CheckSessionService {
+  private modals: CheckSessionComponent[] = [];
 
-  add(modal: HelpComponent) {
+  add(modal: CheckSessionComponent) {
     // ensure component has a unique id attribute
     if (!modal.id || this.modals.find(x => x.id === modal.id)) {
       throw new Error('modal must have a unique id attribute');
@@ -17,7 +17,7 @@ export class HelpService {
     this.modals.push(modal);
   }
 
-  remove(modal: HelpComponent) {
+  remove(modal: CheckSessionComponent) {
     // remove modal from array of active modals
     this.modals = this.modals.filter(x => x === modal);
   }

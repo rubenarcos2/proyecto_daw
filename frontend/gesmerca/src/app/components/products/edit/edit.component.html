@@ -67,33 +67,60 @@
                     </ng-container>
                 </div>
             </div>
-            <div class="mb-3">
-                <label for="inputPrice" class="form-label">Precio</label>
-                <input (change)="onChangeInput($event)" type="text" class="form-control" id="inputPrice"
-                    formControlName="price">
-                <div class="form-text text-danger"
-                    *ngIf="productFormControls['price'].invalid && (productFormControls['price'].dirty || productFormControls['price'].touched)">
-                    <ng-container *ngIf="productFormControls['price'].errors?.['required']">
-                        Introduzca un precio del producto.
-                    </ng-container>
-                    <ng-container *ngIf="productFormControls['price'].errors?.['pattern']">
-                        Introduzca un valor numérico para el precio (Ej: 9,99).
-                    </ng-container>
+            <div class="multicolumns mb-3">
+                <div>
+                    <label for="inputPrice" class="form-label">Precio</label>
+                    <div><input (change)="onChangeInput($event)" type="text" class="form-control" id="inputPrice"
+                            formControlName="price" type="number" min="0.01" step="0.01">€</div>
+                    <div class="form-text text-danger"
+                        *ngIf="productFormControls['price'].invalid && (productFormControls['price'].dirty || productFormControls['price'].touched)">
+                        <ng-container *ngIf="productFormControls['price'].errors?.['required']">
+                            Introduzca un precio del producto.
+                        </ng-container>
+                        <ng-container *ngIf="productFormControls['price'].errors?.['pattern']">
+                            Introduzca un valor numérico para el precio (Ej: 9,99).
+                        </ng-container>
+                    </div>
+                </div>
+                <div>
+                    <label for="inputPriceMin" class="form-label">Precio Mín.</label>
+                    <div><input (change)="onChangeInput($event)" type="text" class="form-control" id="inputPriceMin"
+                            formControlName="priceMin" type="number" min="0.01" step="0.01" readonly>€</div>
+                </div>
+                <div>
+                    <label for="inputPriceMax" class="form-label">Precio Máx.</label>
+                    <div><input (change)="onChangeInput($event)" type="text" class="form-control" id="inputPriceMax"
+                            formControlName="priceMax" type="number" min="0.01" step="0.01" readonly>€</div>
+                </div>
+                <div>
+                    <label for="inputPriceAvg" class="form-label">Precio Medio</label>
+                    <div><input (change)="onChangeInput($event)" type="number" min="0.01" step="0.01"
+                            class="form-control" id="inputPriceAvg" formControlName="priceAvg" readonly>€</div>
+                </div>
+                <div>
+                    <label for="inputPriceEst" class="form-label">Precio Est. (IA)*</label>
+                    <div><input (change)="onChangeInput($event)" type="number" min="0.01" step="0.01"
+                            title="Precio estimado de la próxima compra mediante IA" class="form-control"
+                            id="inputPriceEst" formControlName="priceEst" readonly>€</div>
+                </div>
+
+                <div>
+                    <label for="inputStock" class="form-label">Stock</label>
+                    <div><input (change)="onChangeInput($event)" type="text" class="form-control" id="inputStock"
+                            formControlName="stock">ud/s</div>
+                    <div class="form-text text-danger"
+                        *ngIf="productFormControls['stock'].invalid && (productFormControls['stock'].dirty || productFormControls['stock'].touched)">
+                        <ng-container *ngIf="productFormControls['stock'].errors?.['required']">
+                            Introduzca el stock actual del producto.
+                        </ng-container>
+                        <ng-container *ngIf="productFormControls['stock'].errors?.['pattern']">
+                            Introduzca un valor numérico (Ej: 99).
+                        </ng-container>
+                    </div>
                 </div>
             </div>
             <div class="mb-3">
-                <label for="inputStock" class="form-label">Stock</label>
-                <input (change)="onChangeInput($event)" type="text" class="form-control" id="inputStock"
-                    formControlName="stock">
-                <div class="form-text text-danger"
-                    *ngIf="productFormControls['stock'].invalid && (productFormControls['stock'].dirty || productFormControls['stock'].touched)">
-                    <ng-container *ngIf="productFormControls['stock'].errors?.['required']">
-                        Introduzca el stock actual del producto.
-                    </ng-container>
-                    <ng-container *ngIf="productFormControls['stock'].errors?.['pattern']">
-                        Introduzca un valor numérico (Ej: 99).
-                    </ng-container>
-                </div>
+                <h6>* Precio estimado de la próxima compra mediante IA</h6>
             </div>
             <button type="submit" class="btn btn-primary"
                 [disabled]="!productForm.valid || !isSubmitted">Enviar</button>

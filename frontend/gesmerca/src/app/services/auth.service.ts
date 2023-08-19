@@ -24,6 +24,16 @@ export class AuthService {
     );
   }
 
+  refresh(data: any) {
+    return this.http.post(`${this._baseUrl}/auth/refresh`, data).pipe(
+      map(result => {
+        sessionStorage.setItem('authUser', JSON.stringify(result));
+        this.profile();
+        return result;
+      })
+    );
+  }
+
   register(data: any) {
     return this.http.post(`${this._baseUrl}/auth/register`, data);
   }

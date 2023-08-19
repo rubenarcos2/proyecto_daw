@@ -154,13 +154,18 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
         (document.getElementById('select-product') as HTMLSelectElement).selectedIndex
       ].text
     );
-    this.dataProductForm.append('quantity', this.goodsReceiptProductForm.get('quantity')?.value);
-    if (this.goodsReceiptProductForm.get('price')?.value != null)
-      this.dataProductForm.append(
-        'price',
-        this.goodsReceiptProductForm.get('price')?.value.replace(/,/g, '.')
-      );
-    else this.dataProductForm.append('price', '0');
+    this.goodsReceiptProductForm.get('quantity')?.value == null
+      ? this.dataProductForm.append('quantity', '0')
+      : this.dataProductForm.append(
+          'quantity',
+          this.goodsReceiptProductForm.get('quantity')?.value
+        );
+    this.goodsReceiptProductForm.get('price')?.value != null
+      ? this.dataProductForm.append(
+          'price',
+          String(this.goodsReceiptProductForm.get('price')?.value).replace(/,/g, '.')
+        )
+      : this.dataProductForm.append('price', '0');
 
     this._goodsReceiptProducts?.push({
       idproduct: Number(this.dataProductForm.get('idproduct')),

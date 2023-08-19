@@ -55,47 +55,48 @@ class CreateProductsSeeder extends Seeder
 
     private function saveThumbnail($saveToDir, $imagePath, $imageName, $max_x, $max_y) {
         try{
-            preg_match("'^(.*)\.(gif|jpe?g|png)$'i", $imageName, $ext);
-            switch (strtolower($ext[2])) {
-                case 'jpg' : 
-                case 'jpeg': $im   = imagecreatefromjpeg($imagePath);
-                             break;
-                case 'gif' : $im   = imagecreatefromgif($imagePath);
-                             break;
-                case 'png' : $im   = imagecreatefrompng($imagePath);
-                             break;
-                default    : $stop = true;
-                             break;
-            }
-            
-            if (!isset($stop)) {
-                $x = imagesx($im);
-                $y = imagesy($im);
-            
-                if (($max_x/$max_y) < ($x/$y)) {
-                    $save = imagecreatetruecolor($x/($x/$max_x), $y/($x/$max_x));
-                }
-                else {
-                    $save = imagecreatetruecolor($x/($y/$max_y), $y/($y/$max_y));
-                }
-                imagecopyresized($save, $im, 0, 0, 0, 0, imagesx($save), imagesy($save), $x, $y);
-    
+            if(preg_match("'^(.*)\.(gif|jpe?g|png)$'i", $imageName, $ext)){
                 switch (strtolower($ext[2])) {
                     case 'jpg' : 
-                    case 'jpeg': imagejpeg($save, "{$saveToDir}{$ext[1]}_{$max_x}x{$max_y}.jpg");
-                                 break;
-                    case 'gif' : imagegif($save, "{$saveToDir}{$ext[1]}_{$max_x}x{$max_y}.gif");
-                                 break;
-                    case 'png' : 
-                        $black = imagecolorallocate($im, 0, 0, 0);
-                        imagecolortransparent($save, $black);
-                        @imagepng($save, "{$saveToDir}{$ext[1]}_{$max_x}x{$max_y}.png");
-                                 break;
+                    case 'jpeg': $im   = imagecreatefromjpeg($imagePath);
+                                break;
+                    case 'gif' : $im   = imagecreatefromgif($imagePath);
+                                break;
+                    case 'png' : $im   = imagecreatefrompng($imagePath);
+                                break;
+                    default    : $stop = true;
+                                break;
                 }
-    
-                imagedestroy($im);
-                imagedestroy($save);
-            } 
+                
+                if (!isset($stop)) {
+                    $x = imagesx($im);
+                    $y = imagesy($im);
+                
+                    if (($max_x/$max_y) < ($x/$y)) {
+                        $save = imagecreatetruecolor($x/($x/$max_x), $y/($x/$max_x));
+                    }
+                    else {
+                        $save = imagecreatetruecolor($x/($y/$max_y), $y/($y/$max_y));
+                    }
+                    imagecopyresized($save, $im, 0, 0, 0, 0, imagesx($save), imagesy($save), $x, $y);
+        
+                    switch (strtolower($ext[2])) {
+                        case 'jpg' : 
+                        case 'jpeg': imagejpeg($save, "{$saveToDir}{$ext[1]}_{$max_x}x{$max_y}.jpg");
+                                    break;
+                        case 'gif' : imagegif($save, "{$saveToDir}{$ext[1]}_{$max_x}x{$max_y}.gif");
+                                    break;
+                        case 'png' : 
+                            $black = imagecolorallocate($im, 0, 0, 0);
+                            imagecolortransparent($save, $black);
+                            @imagepng($save, "{$saveToDir}{$ext[1]}_{$max_x}x{$max_y}.png");
+                                    break;
+                    }
+        
+                    imagedestroy($im);
+                    imagedestroy($save);
+                } 
+            }
         }catch(\Exception $e){
             throw $e;
         }

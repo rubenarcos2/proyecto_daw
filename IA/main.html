@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<style>
+    form {
+        position: top;
+        margin: auto;
+        width: 25em;
+    }
+
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: top;
+    }
+
+    .result {
+        margin: auto;
+        width: 25em;
+        border: 1px solid #ccc;
+    }
+</style>
+
+<head>
+    <title>Juego Hotel</title>
+	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+
+<body>
+    <div class='container'>
+        <div>
+            <form action="{{ url_for('main') }}" method="POST">
+                <fieldset>
+                    <legend>Predicción de comprar:</legend>
+                    Tirada:
+                    <br>
+                    <input name="tirada" type="number" min="1" required>
+                    <br>
+                    <br>Número de la casilla:
+                    <input name="casilla" type="number" min="1" max="30" required>
+                    <br>
+                    <br>Valor de la casilla:
+                    <select name="valor_casilla"required>
+						<option value="0">Compra</option>
+						<option value="1">Construye</option>
+						<option value="2">Edificio gratis</option>
+						<option value="3">Entrada gratis</option>
+						<option value="4">Casilla de salida</option>
+					</select>
+                    <br>
+                    <br>
+                    <input name="form_comprar" type="submit">
+                </fieldset>
+            </form>
+            <br>
+            <div class="result" align="center">
+                {% for variable, value in original_input.items() %}
+                <b>{{ variable }}</b> : {{ value }}
+                {% endfor %}
+                <br>
+                <br>
+                {% if original_input.items()|length > 1 %}
+					{% if result %}
+					<h2>Se recomienda comprar</h2>
+					{% else %}
+					<h2>No se recomienda comprar</h2>
+					{% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+<script src="functions.js"></script>
+
+</html>

@@ -185,7 +185,7 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
     this.dataProductForm.append('quantity', this.goodsReceiptProductForm.get('quantity')?.value);
     this.dataProductForm.append(
       'price',
-      this.goodsReceiptProductForm.get('price')?.value.replace(/,/g, '.')
+      String(this.goodsReceiptProductForm.get('price')?.value).replace(/,/g, '.')
     );
     this.subs7 = this.goodsReceiptService
       .addProduct(this.dataProductForm, this.goodsReceipt?.id)
