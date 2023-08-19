@@ -25,6 +25,10 @@ export class GoodsReceiptListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.getSupliersAndUsers();
+  }
+
+  getSupliersAndUsers() {
     this.subs = this.goodsReceiptService
       .getAll()
       .pipe(first())
@@ -94,6 +98,7 @@ export class GoodsReceiptListComponent implements OnInit, OnDestroy {
           let res = JSON.parse(JSON.stringify(result));
           this._links = res.links;
           this._goodsReceipt = res.data;
+          this.getSupliersAndUsers();
         },
         error: error => {
           this.toastr.error(error ? error : 'No se puede conectar con el servidor');
