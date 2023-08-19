@@ -285,7 +285,7 @@ class ProductController extends Controller
     private function getPriceEst($idproduct, $stock, $created_at){
         $response = Http::post('https://vps.rarcos.com:10450', [
             "idproduct" => $idproduct,
-            "quantity" => $stock,
+            "stock" => $stock,
             "created_at" => $created_at
         ]);
         return $response['price'];

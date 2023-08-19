@@ -26,12 +26,11 @@ print(df.info())
 
 #df['created_at'] = (df['created_at'] - df['created_at'].min())  / np.timedelta64(1,'D')
 df['created_at'] = (df['created_at'] - np.datetime64('1970-01-01T00:00:00Z')) / np.timedelta64(1, 's')
-print(df['created_at'].values)
 
 print(df)
 
 # Putting feature variable to X
-X = df.filter(['idproduct', 'quantity', 'created_at'])
+X = df.filter(['idproduct', 'stock', 'created_at'])
 
 # Putting response variable to y
 y = df['price']
@@ -42,7 +41,6 @@ X_train.shape
 
 #GaussianNB
 #----------
-
 # 0. Creación de instancia del modelo
 # Con asignación de valores a hiperparámetros
 model = GaussianNB(priors = None, var_smoothing = 1e-10)
@@ -68,3 +66,5 @@ import pickle
 
 with open('gesmerca_price_estimated.pkl', 'wb') as file:
   pickle.dump(model, file)
+
+print(file.name)

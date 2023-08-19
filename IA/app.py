@@ -26,13 +26,13 @@ def main():
         content = flask.request.json
         
         idproduct = content['idproduct']
-        quantity = content['quantity']
+        stock = content['stock']
         created_at = content['created_at']
 
         created_at_unix_time = datetime.strptime(created_at, "%Y-%m-%dT%H:%M:%S.%fZ").timestamp()
 
-        input_variables = pd.DataFrame([[idproduct, quantity, created_at_unix_time]],
-                               columns=['idproduct', 'quantity', 'created_at'],
+        input_variables = pd.DataFrame([[idproduct, stock, created_at_unix_time]],
+                               columns=['idproduct', 'stock', 'created_at'],
                                        dtype=float)        
         prediction = model.predict(input_variables)[0]
 
