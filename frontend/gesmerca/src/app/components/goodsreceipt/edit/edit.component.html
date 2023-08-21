@@ -82,6 +82,7 @@
                         <th>Cantidad</th>
                         <th>Precio</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -100,6 +101,7 @@
                                 <span *ngIf="!goodsReceiptProduct.isDeleting">Eliminar</span>
                             </button>
                         </td>
+                        <td></td>
                     </tr>
                     <tr *ngIf="!goodsReceiptProducts">
                         <td colspan="6" class="text-center">
@@ -113,14 +115,17 @@
                     <option *ngFor="let product of products" value="{{product.id}}">
                         {{product.name}}</option>
                 </select>
-                <div><input style="width: 2rem;" type="number" formControlName="quantity" min="1"
-                        oninput="validity.valid||(value='');"> ud/s</div>
-                <div><input style="width: 3rem;" type="number" min="0.01" step="0.01" formControlName="price"> €</div>
+                <div><input style="width: 3rem;" type="number" formControlName="quantity" min="1"
+                        oninput="validity.valid||(value='');" (change)="onChangeInputProduct($event)"> ud/s</div>
+                <div><input style="width: 4rem;" type="number" min="0.01" step="0.01" formControlName="price"> €</div>
                 <button class="btn btn-primary btn-sm" type="submit"
                     [disabled]="!goodsReceiptProductForm.valid">Añadir</button>
                 <a href="/productos/nuevo" class="btn btn-secondary">Nuevo</a>
             </form>
-            <br>
+            <div class="onerow mb-3">
+                <h6>Precio estimado prod. y cant. seleccionados (IA)</h6>
+                <div id="priceEst" style="width: 4rem;"></div>
+            </div>
             <button type="submit" class="btn btn-primary"
                 [disabled]="!goodsReceiptForm.valid || !isSubmitted">Enviar</button>
         </form>

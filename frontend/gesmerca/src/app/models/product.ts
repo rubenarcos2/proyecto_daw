@@ -7,7 +7,6 @@ export interface Product {
   priceMin?: number;
   priceMax?: number;
   priceAvg?: number;
-  priceEst?: number;
   image?: string;
   thumbail_32x32?: string;
   thumbail_128x128?: string;

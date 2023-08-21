@@ -62,7 +62,6 @@ export class ProductEditComponent implements OnInit, OnDestroy {
           priceMin: [this.product?.priceMin],
           priceMax: [this.product?.priceMax],
           priceAvg: [this.product?.priceAvg],
-          priceEst: [this.product?.priceEst],
           stock: [this.product?.stock, [Validators.required, Validators.pattern('^[0-9]*$')]],
         });
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'];

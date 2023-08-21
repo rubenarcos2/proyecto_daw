@@ -39,6 +39,7 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
   private subs3: Subscription = new Subscription();
   private subs4: Subscription = new Subscription();
   private subs5: Subscription = new Subscription();
+  private subs6: Subscription = new Subscription();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -178,8 +179,10 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
       e => e.id !== Number(this.dataProductForm.get('idproduct'))
     );
 
-    if (this.products?.length == 0)
+    if (this.products?.length == 0) {
       document.getElementsByTagName('form')[1]?.setAttribute('hidden', 'true');
+      document.getElementsByClassName('threecolumns mb-3')[0]?.setAttribute('hidden', 'true');
+    }
   }
 
   onChangeSuppliers(event: any) {
@@ -191,8 +194,10 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
         let res = JSON.parse(JSON.stringify(result));
         this._products = res;
         this._products = this._products?.filter(e => e.supplier == index);
-        if (this.products?.length == 0)
+        if (this.products?.length == 0) {
           document.getElementsByTagName('form')[1]?.setAttribute('hidden', 'true');
+          document.getElementsByClassName('threecolumns mb-3')[0]?.setAttribute('hidden', 'true');
+        }
         this.isLoaded = true;
       },
       error: error => {
@@ -216,6 +221,30 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
       case 'inputTime':
         this.isSubmitted = this.goodsReceiptForm.get('time')?.value !== this.goodsReceipt?.time;
         break;
+    }
+  }
+
+  onChangeInputProduct(event: any) {
+    let cmbProd = document.getElementById('select-product') as HTMLSelectElement;
+    let priceEst = document.getElementById('priceEst') as HTMLLabelElement;
+
+    if (priceEst && cmbProd.value) {
+      let form: FormData = new FormData();
+      form.append(
+        'idproduct',
+        (document.getElementById('select-product') as HTMLSelectElement).value
+      );
+      form.append('quantity', this.goodsReceiptProductForm.get('quantity')?.value);
+
+      this.subs6 = this.goodsReceiptService.getPriceEst(form).subscribe({
+        next: result => {
+          let res = JSON.parse(JSON.stringify(result));
+          priceEst.textContent = res.price + '€';
+        },
+        error: error => {
+          this.toastr.error(error ? error : 'Operación no autorizada');
+        },
+      });
     }
   }
 
@@ -274,6 +303,7 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
     this.subs3.unsubscribe();
     this.subs4.unsubscribe();
     this.subs5.unsubscribe();
+    this.subs6.unsubscribe();
   }
 
   get goodsReceiptFormControls() {

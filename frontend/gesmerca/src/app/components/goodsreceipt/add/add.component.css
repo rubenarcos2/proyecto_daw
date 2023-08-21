@@ -11,7 +11,8 @@
 
 #productForm {
   display: grid;
-  grid-template-columns: 30% 20% auto auto auto;
+  grid-template-columns: 30% 18% 18% auto auto;
+  align-items: center;
   gap: 1.2rem;
 }
 
@@ -33,6 +34,13 @@
 .twocolumns div div {
   display: flex;
   flex-direction: row;
+}
+
+.onerow {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 2rem;
 }
 
 @media screen and (max-width: 720px) {

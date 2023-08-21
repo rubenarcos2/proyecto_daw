@@ -63,7 +63,7 @@ class CreateGoodsReceiptSeeder extends Seeder
                         'idgoodsreceipt' => $goodReceipt->id,
                         'idproduct' => $prod->id,
                         'quantity' => $faker->numberBetween($min = 1, $max = 99),
-                        'price' =>$faker->numberBetween($min = 1, $max = 999),
+                        'price' =>$faker->randomFloat(2, $min = $prod->price - $prod->price * 0.25, $max = $prod->price + $prod->price * 0.25),
                     ]);
                 }
             }else{

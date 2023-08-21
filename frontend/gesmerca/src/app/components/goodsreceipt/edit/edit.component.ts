@@ -37,6 +37,7 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
   private subs5: Subscription = new Subscription();
   private subs6: Subscription = new Subscription();
   private subs7: Subscription = new Subscription();
+  private subs8: Subscription = new Subscription();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -220,6 +221,30 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
     }
   }
 
+  onChangeInputProduct(event: any) {
+    let cmbProd = document.getElementById('select-product') as HTMLSelectElement;
+    let priceEst = document.getElementById('priceEst') as HTMLLabelElement;
+
+    if (priceEst && cmbProd.value) {
+      let form: FormData = new FormData();
+      form.append(
+        'idproduct',
+        (document.getElementById('select-product') as HTMLSelectElement).value
+      );
+      form.append('quantity', this.goodsReceiptProductForm.get('quantity')?.value);
+
+      this.subs8 = this.goodsReceiptService.getPriceEst(form).subscribe({
+        next: result => {
+          let res = JSON.parse(JSON.stringify(result));
+          priceEst.textContent = res.price + '€';
+        },
+        error: error => {
+          this.toastr.error(error ? error : 'Operación no autorizada');
+        },
+      });
+    }
+  }
+
   dateValidator(control: FormControl): { [key: string]: any } | null {
     if (control.value) {
       let date = control.value;
@@ -276,6 +301,7 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
     this.subs5.unsubscribe();
     this.subs6.unsubscribe();
     this.subs7.unsubscribe();
+    this.subs8.unsubscribe();
   }
 
   get goodsReceiptFormControls() {

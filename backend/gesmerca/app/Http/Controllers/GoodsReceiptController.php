@@ -5,6 +5,8 @@ use App\Models\GoodsReceipt;
 use App\Models\GoodsReceiptProduct;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+
 use App;
 
 class GoodsReceiptController extends Controller
@@ -112,7 +114,7 @@ class GoodsReceiptController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function deleteProduct(Request $request)
+    public function deleteProduct(string $id, Request $request)
     {
         try{
             $this->validate($request, [
@@ -123,7 +125,7 @@ class GoodsReceiptController extends Controller
             $goodReceiptProduct = GoodsReceiptProduct::find($request->idgoodsreceiptproduct);
             $goodReceiptProduct->delete();
 
-            //Increment product stock
+            //Decrement product stock
             $product = Product::find($goodReceiptProduct->idproduct);
             $product->stock -= $request->quantity;
             $product->save();
@@ -209,6 +211,15 @@ class GoodsReceiptController extends Controller
     {
         try{
             $goodReceipt = GoodsReceipt::find($id);
+            //Delete all products' line of Goods Receipt
+            foreach ($goodReceipt->products as $prod) {
+                $goodReceiptProduct = GoodsReceiptProduct::find($prod->id);
+                $goodReceiptProduct->delete();
+                //Decrement product stock
+                $product = Product::find($prod->idproduct);
+                $product->stock -= $prod->quantity;
+                $product->save();
+            }
             $goodReceipt->delete();
             
             return response()->json(['message' => 'Se ha eliminado el albarán de recepción de mercancía correctamente']);
@@ -217,4 +228,16 @@ class GoodsReceiptController extends Controller
         }
     }
 
+    /**
+     * Connect to external API wich content an AI process to estimate the next purchase price
+     * 
+     * Only enable on production server!!!
+     */
+    public function getPriceEst(Request $request){
+        $response = Http::post('https://vps.rarcos.com:10450', [
+            "idproduct" => intval($request->idproduct),
+            "quantity" => intval($request->quantity)
+        ]);
+        return $response;
+    }
 }

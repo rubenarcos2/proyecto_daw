@@ -6,6 +6,7 @@ import { GoodsReceipt } from 'src/app/models/goodsreceipt';
 import { AuthService } from 'src/app/services/auth.service';
 import { SupplierService } from 'src/app/services/supplier.service';
 import { User } from 'src/app/models/user';
+import { GoodsReceiptProduct } from 'src/app/models/goodsreceiptproduct';
 
 @Component({ templateUrl: 'list.component.html' })
 export class GoodsReceiptListComponent implements OnInit, OnDestroy {
@@ -16,6 +17,7 @@ export class GoodsReceiptListComponent implements OnInit, OnDestroy {
   private subs3: Subscription = new Subscription();
   private subs4: Subscription = new Subscription();
   private subs5: Subscription = new Subscription();
+  private subs6: Subscription = new Subscription();
 
   constructor(
     private goodsReceiptService: GoodsreceiptService,
@@ -38,7 +40,7 @@ export class GoodsReceiptListComponent implements OnInit, OnDestroy {
           this._links = res.links;
           this._goodsReceipt = res.data;
           this.goodsreceipts!.forEach(e => {
-            this.subs4 = this.supplierService.getById(e.idsupplier).subscribe({
+            this.subs = this.supplierService.getById(e.idsupplier).subscribe({
               next: result => {
                 e.supplierName = result.name;
               },
@@ -47,7 +49,7 @@ export class GoodsReceiptListComponent implements OnInit, OnDestroy {
               },
             });
           });
-          this.subs5 = this.authService.getAllUsers().subscribe({
+          this.subs2 = this.authService.getAllUsers().subscribe({
             next: result => {
               let res = JSON.parse(JSON.stringify(result));
               let users: User[] = res;
@@ -71,7 +73,7 @@ export class GoodsReceiptListComponent implements OnInit, OnDestroy {
       window.confirm('¿Seguro que desea borrar el albarán de recepción de mercancía ' + name + '?')
     ) {
       const supplier = this.goodsreceipts!.find(x => x.id === id);
-      this.subs2 = this.goodsReceiptService.delete(supplier, id).subscribe({
+      this.subs5 = this.goodsReceiptService.delete(supplier, id).subscribe({
         next: result => {
           this._goodsReceipt = this.goodsreceipts!.filter(x => x.id !== id);
           let msg = JSON.parse(JSON.stringify(result));
@@ -90,7 +92,7 @@ export class GoodsReceiptListComponent implements OnInit, OnDestroy {
 
   onChangePagination(event: any): void {
     event.preventDefault();
-    this.subs3 = this.goodsReceiptService
+    this.subs6 = this.goodsReceiptService
       .getAll(event.target.href.split('?')[1])
       .pipe(first())
       .subscribe({
@@ -118,6 +120,7 @@ export class GoodsReceiptListComponent implements OnInit, OnDestroy {
     this.subs3.unsubscribe();
     this.subs4.unsubscribe();
     this.subs5.unsubscribe();
+    this.subs6.unsubscribe();
   }
 
   get goodsreceipts() {

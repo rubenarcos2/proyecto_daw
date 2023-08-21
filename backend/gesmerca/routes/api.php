@@ -106,6 +106,7 @@ Route::group([
     Route::get('/', [GoodsReceiptController::class, 'index']);
     Route::get('/{id}', [GoodsReceiptController::class, 'show'])->where('id', '[0-9]+');
     Route::get('/{id}/products', [GoodsReceiptController::class, 'products'])->where('id', '[0-9]+');
+    Route::post('/getPriceEst', [GoodsReceiptController::class, 'getPriceEst']);
     Route::post('/{id}/product/add', [GoodsReceiptController::class, 'addProduct'])->where('id', '[0-9]+');
     Route::post('/{id}/product/delete', [GoodsReceiptController::class, 'deleteProduct'])->where('id', '[0-9]+');
     Route::post('/create', [GoodsReceiptController::class, 'create']);

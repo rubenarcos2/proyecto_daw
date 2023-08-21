@@ -25,6 +25,10 @@ export class GoodsreceiptService {
     return this.http.get<GoodsReceipt>(`${this.baseUrl}/goodsreceipt/${id}`);
   }
 
+  getPriceEst(params: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/goodsreceipt/getPriceEst`, params);
+  }
+
   getProducts(id: any): Observable<GoodsReceiptProduct[]> {
     return this.http.get<GoodsReceiptProduct[]>(`${this.baseUrl}/goodsreceipt/${id}/products`);
   }
@@ -37,10 +41,7 @@ export class GoodsreceiptService {
   }
 
   deleteProduct(params: any, id: any): Observable<any> {
-    return this.http.post<GoodsReceiptProduct>(
-      `${this.baseUrl}/goodsreceipt/${id}/product/delete`,
-      params
-    );
+    return this.http.post(`${this.baseUrl}/goodsreceipt/${id}/product/delete`, params);
   }
 
   create(params: any): Observable<any> {

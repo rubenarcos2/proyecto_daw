@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use App\Models\Product;
 use App\Models\GoodsReceiptProduct;
 use Illuminate\Support\Facades\URL;
@@ -75,7 +74,6 @@ class ProductController extends Controller
             $product->priceMin = $this->getPriceMin($id);
             $product->priceMax = $this->getPriceMax($id);
             $product->priceAvg = $this->getPriceAvg($id);
-            $product->priceEst = $this->getPriceEst($id, $product->stock, $product->created_at);
             if (empty($product))
                 return response()->json(['error' => 'No existe un producto para el id dado']);
             else
@@ -275,19 +273,5 @@ class ProductController extends Controller
     private function getPriceAvg($idproduct){
         $grp = GoodsReceiptProduct::where('idproduct', $idproduct);        
         return round($grp->avg('price'),2);
-    }
-
-    /**
-     * Connect to external API wich content an AI process to estimate the next purchase price
-     * 
-     * Only enable on production server
-     */    
-    private function getPriceEst($idproduct, $stock, $created_at){
-        $response = Http::post('https://vps.rarcos.com:10450', [
-            "idproduct" => $idproduct,
-            "stock" => $stock,
-            "created_at" => $created_at
-        ]);
-        return $response['price'];
     }
 }
