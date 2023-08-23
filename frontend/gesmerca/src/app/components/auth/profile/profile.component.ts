@@ -15,6 +15,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   constructor(private authService: AuthService, private toastr: ToastrService) {}
 
+  /**
+   * This function start on event page
+   *
+   * Get login user's profile of the backend
+   *
+   */
   ngOnInit(): void {
     this.subs = this.authService.profile().subscribe({
       complete: () => {

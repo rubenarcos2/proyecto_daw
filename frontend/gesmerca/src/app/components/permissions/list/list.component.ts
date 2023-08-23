@@ -30,9 +30,11 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
    *
    */
   ngOnInit(): void {
+    //Get all users of backend
     this.subs = this.authService.getAllUsers().subscribe({
       next: result => {
         this._users = JSON.parse(JSON.stringify(result));
+        //Get all permissions of backend
         this.permissionService.getAll().subscribe({
           next: result => {
             this._permissions = JSON.parse(JSON.stringify(result));
@@ -42,6 +44,7 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
           },
         });
         this._users.forEach(u => {
+          //Get user's permission of backend
           this.permissionService.getPermissionsUser(u.id).subscribe({
             next: result => {
               let permissions = JSON.parse(JSON.stringify(result));

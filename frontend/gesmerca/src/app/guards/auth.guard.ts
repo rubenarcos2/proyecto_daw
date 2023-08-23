@@ -13,6 +13,10 @@ export class AuthGuard implements CanActivate {
     private toastr: ToastrService
   ) {}
 
+  /*
+   * Allows or denies access to a route based on the url and component path
+   *
+   */
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     const authUser = this.authService.getAuthUser();
     if (authUser) {

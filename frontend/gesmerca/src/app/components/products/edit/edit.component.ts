@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -33,10 +33,16 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
+  /**
+   * This function start on event page
+   *
+   */
   ngOnInit(): void {
     let id;
     this.dataForm = new FormData();
     this.route.params.subscribe(param => (id = parseInt(param['id'])));
+
+    //Get all suppliers of backend
     this.subs = this.supplierService.getAllNoPaginated().subscribe({
       next: result => {
         let res = JSON.parse(JSON.stringify(result));
@@ -46,6 +52,8 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         this.toastr.error(error ? error : 'Operación no autorizada');
       },
     });
+
+    //Get all products of backend
     this.subs2 = this.productService.getById(id).subscribe({
       next: result => {
         this._product = result;
@@ -72,6 +80,12 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This function execute on form submit
+   *
+   * Send form data to backend and update product data
+   *
+   */
   onSubmit() {
     this.isSubmitted = true;
     this.dataForm.append('id', this.productForm.get('id')?.value);
@@ -82,6 +96,8 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     if (this.dataForm.get('image') !== null)
       this.dataForm.append('image', this.productForm.get('image')?.value);
     this.dataForm.append('stock', this.productForm.get('stock')?.value);
+
+    //Modify product data to backend
     this.subs3 = this.productService.update(this.dataForm).subscribe({
       next: result => {
         let res = JSON.parse(JSON.stringify(result));
@@ -97,6 +113,13 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This function execute on change event input
+   *
+   * Detect if input value is changed and set submited value on true change
+   *
+   * @param  {Event} event The event change input
+   */
   onChangeInput(event: any) {
     let input = event.target.id;
     this.isSubmitted = true;
@@ -116,15 +139,28 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * On event input file append a new image
+   *
+   * @param  {any} file The input file
+   */
   onChangeFile(file: any) {
     this.dataForm.append('image', file.target.files[0], file.name);
     this.isSubmitted = true;
   }
 
+  /**
+   * When load image remove spinner
+   */
   onLoadImg(event: any) {
     event.srcElement.classList.remove('spinner-border');
   }
 
+  /**
+   * On event supplier combobox load select the supplier of product
+   *
+   * @param  {any} event The combobox event
+   */
   onChangeCmbSupplier(event: any) {
     let sel = event.target as HTMLSelectElement;
     for (let i = 0; i < sel.options.length; i++) {
@@ -132,6 +168,18 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         sel.options[i].selected = true;
       }
     }
+  }
+
+  /**
+   * This function start on refresh or close window/tab navigator
+   *
+   * Detect if there are changes without save
+   *
+   * More info about behaviour: https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
+   */
+  @HostListener('window:beforeunload', ['$event'])
+  handleClose(e: BeforeUnloadEvent): void {
+    if (!this.isSubmitted) e.returnValue = '';
   }
 
   /**

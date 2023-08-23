@@ -17,6 +17,7 @@ export class RoleListComponent implements OnInit, OnDestroy {
   private subs: Subscription = new Subscription();
   private subs2: Subscription = new Subscription();
   private subs3: Subscription = new Subscription();
+  private subs4: Subscription = new Subscription();
 
   constructor(
     protected authService: AuthService,
@@ -24,12 +25,18 @@ export class RoleListComponent implements OnInit, OnDestroy {
     private toastr: ToastrService
   ) {}
 
+  /**
+   * This function start on event page
+   *
+   */
   ngOnInit(): void {
+    //Get all users of backend
     this.subs = this.authService.getAllUsers().subscribe({
       next: result => {
         this._users = JSON.parse(JSON.stringify(result));
         this._users.forEach(u => {
-          this.roleService.getRoleUser(u.id).subscribe({
+          //Get all roles of this user
+          this.subs2 = this.roleService.getRoleUser(u.id).subscribe({
             next: result => {
               let rol = JSON.parse(JSON.stringify(result));
               this.selectCmbRole(u, rol);
@@ -44,7 +51,7 @@ export class RoleListComponent implements OnInit, OnDestroy {
         this.toastr.error(error ? error : 'No se puede conectar con el servidor');
       },
     });
-    this.subs2 = this.roleService.getAll().subscribe({
+    this.subs3 = this.roleService.getAll().subscribe({
       next: result => {
         this._roles = JSON.parse(JSON.stringify(result));
       },
@@ -54,6 +61,14 @@ export class RoleListComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This function execute on change event role combobox
+   *
+   * Detect if value is changed and set selected rol
+   *
+   * @param  {User} u The user selected
+   * @param  {Role} rol The role selected
+   */
   selectCmbRole(u: User, rol: Role) {
     u.roles?.push(rol);
     let sel = document.getElementById('select-roles-' + u.id) as HTMLSelectElement;
@@ -63,6 +78,13 @@ export class RoleListComponent implements OnInit, OnDestroy {
     document.getElementById('btn-' + u.id)?.removeAttribute('disabled');
   }
 
+  /**
+   * This function execute on change event save button click
+   *
+   * Set roles for this user
+   *
+   * @param  {Event} event The event button click
+   */
   updateRole(event: any) {
     let btnSave = event.target;
     let userId = btnSave.id.substring('btn-'.length);
@@ -71,7 +93,9 @@ export class RoleListComponent implements OnInit, OnDestroy {
     if (window.confirm('¿Está seguro que desea cambiar el rol al usuario?')) {
       let param = new FormData();
       param.append('id', roleId);
-      this.subs3 = this.roleService.setRoleUser(param, userId).subscribe({
+
+      //Set role of user to backend
+      this.subs4 = this.roleService.setRoleUser(param, userId).subscribe({
         next: result => {
           let res = JSON.parse(JSON.stringify(result));
           res.error ? this.toastr.error(res.error) : this.toastr.success(res.message);
@@ -93,6 +117,7 @@ export class RoleListComponent implements OnInit, OnDestroy {
     this.subs.unsubscribe();
     this.subs2.unsubscribe();
     this.subs3.unsubscribe();
+    this.subs4.unsubscribe();
   }
 
   get users(): User[] {

@@ -29,6 +29,10 @@ export class NavBarComponent implements OnInit, OnDestroy {
     @Inject(DOCUMENT) private document: any
   ) {}
 
+  /**
+   * This function start on event page
+   *
+   */
   ngOnInit(): void {
     this.router.events.subscribe(e => {
       if (e instanceof RouterEvent) {
@@ -49,10 +53,18 @@ export class NavBarComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This function start on event load page
+   *
+   */
   ngOnLoad(): void {
     this.sharpContrast();
   }
 
+  /**
+   * This function start on event after view page
+   *
+   */
   ngAfterViewChecked() {
     //Check user config to if activate sharpcontrast
     if (this.authService.isLoggedIn && this.configService.isUserConfigLoaded)
@@ -63,7 +75,12 @@ export class NavBarComponent implements OnInit, OnDestroy {
     this.doc = document;
   }
 
+  /**
+   * Send logout to backend and reset general configuration
+   *
+   */
   handleLogout() {
+    //Send logout to backend
     this.subs2 = this.authService.logout().subscribe({
       next: () => {
         this.router.navigate(['/']);
@@ -77,6 +94,10 @@ export class NavBarComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Generate route path of breadcrumb
+   *
+   */
   createBreadcrumb(url: string) {
     if (url === '/' || url.indexOf('?') > 0)
       document.getElementById('breadcrumb-nav')!.innerHTML = '';
@@ -119,6 +140,10 @@ export class NavBarComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Set fullscreen page on click button event
+   *
+   */
   onFullscreen(event: any) {
     if (this.doc.documentElement.requestFullscreen) {
       this.router.navigate(['/']);
@@ -129,6 +154,10 @@ export class NavBarComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Set sharp contrast page
+   *
+   */
   sharpContrast(): void {
     let navBar = document.getElementsByTagName('nav')[0];
     let body = document.body as HTMLElement;
@@ -164,6 +193,10 @@ export class NavBarComponent implements OnInit, OnDestroy {
     ham.style.filter = 'invert(100%)';
   }
 
+  /**
+   * Unset sharp contrast page
+   *
+   */
   sharpContrastDeactivate(): void {
     let navBar = document.getElementsByTagName('nav')[0];
     let body = document.body;

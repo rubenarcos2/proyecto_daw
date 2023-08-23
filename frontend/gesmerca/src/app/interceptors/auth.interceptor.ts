@@ -7,6 +7,10 @@ import { AuthService } from '../services/auth.service';
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) {}
 
+  /*
+   * Intercepts all HTTP requests added a Bearer token
+   *
+   */
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const authUser = this.authService.getAuthUser();
     if (authUser && authUser.access_token) {

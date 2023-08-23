@@ -26,8 +26,13 @@ export class LoginComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
+  /**
+   * This function start on event page
+   *
+   */
   ngOnInit(): void {
     let expired;
+    //Get url's parameter
     this.route.queryParams.subscribe(param => (expired = param['expired']));
     if (expired) {
       document.getElementsByTagName('h2')[0].textContent = 'La sesión ha expirado';
@@ -41,6 +46,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
   }
 
+  /**
+   * This function execute on form submit
+   *
+   */
   onSubmit() {
     this.isSubmitted = true;
     this.subs = this.authService.login(this.loginForm.value).subscribe({

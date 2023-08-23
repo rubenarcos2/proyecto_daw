@@ -19,6 +19,12 @@ export class ConfigGeneralListComponent implements OnInit, OnDestroy {
     public authService: AuthService
   ) {}
 
+  /**
+   * This function start on event page
+   *
+   * Get all general configs of the backend
+   *
+   */
   ngOnInit() {
     this.subs = this.configService
       .getAll()

@@ -19,6 +19,10 @@ export class AppComponent {
     private helpService: HelpService
   ) {}
 
+  /**
+   * Detect all click on page and play TTS with the content
+   *
+   */
   @HostListener('document:click', ['$event'])
   documentClick(event: MouseEvent) {
     if (!window.speechSynthesis.pending) {
@@ -30,6 +34,10 @@ export class AppComponent {
     }
   }
 
+  /**
+   * Detect F2 key event and open help window
+   *
+   */
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
     if (event.key === 'F2') {
@@ -43,19 +51,19 @@ export class AppComponent {
     }
   }
 
+  /**
+   * This function start on event page
+   *
+   */
   ngOnInit() {
     this.configService.getAll().subscribe();
     this._ttsSynth.lang = 'es-ES';
   }
 
-  public doUnload(): void {
-    this.doBeforeUnload();
-  }
-
-  public doBeforeUnload(): void {
-    this.authService.logout();
-  }
-
+  /**
+   * On event play content with TTS speak
+   *
+   */
   tts(event: Event) {
     if (
       event.target !== document.body &&

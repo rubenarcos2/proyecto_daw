@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -28,10 +28,16 @@ export class SupplierEditComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
+  /**
+   * This function start on event page
+   *
+   */
   ngOnInit(): void {
     let id;
     this.dataForm = new FormData();
     this.route.params.subscribe(param => (id = parseInt(param['id'])));
+
+    //Get all suppliers of backend
     this.subs = this.supplierService.getById(id).subscribe({
       next: result => {
         this._supplier = result;
@@ -54,6 +60,12 @@ export class SupplierEditComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This function execute on form submit
+   *
+   * Send form data to backend and modify a supplier
+   *
+   */
   onSubmit() {
     this.isSubmitted = true;
     this.dataForm.append('id', this.supplierForm.get('id')?.value);
@@ -66,12 +78,15 @@ export class SupplierEditComponent implements OnInit, OnDestroy {
     this.dataForm.append('web', this.supplierForm.get('web')?.value);
     this.dataForm.append('notes', this.supplierForm.get('notes')?.value);
 
+    //Update supplier's data to backend
     this.subs2 = this.supplierService
       .update(this.dataForm, this.supplierForm.get('id')?.value)
       .subscribe({
         next: result => {
           let res = JSON.parse(JSON.stringify(result));
           res.error ? this.toastr.error(res.error) : this.toastr.success(res.message);
+
+          //On successful operation redirect to supplier's page
           this.router.navigate([this.returnUrl || '/proveedores']);
         },
         error: error => {
@@ -83,6 +98,13 @@ export class SupplierEditComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This function execute on change event input
+   *
+   * Detect if input value is changed and set submited value on true change
+   *
+   * @param  {Event} event The event change input
+   */
   onChangeInput(event: any) {
     let input = event.target.id;
     this.isSubmitted = true;
@@ -112,6 +134,18 @@ export class SupplierEditComponent implements OnInit, OnDestroy {
         this.isSubmitted = this.supplierForm.get(input)?.value !== this.supplier?.notes;
         break;
     }
+  }
+
+  /**
+   * This function start on refresh or close window/tab navigator
+   *
+   * Detect if there are changes without save
+   *
+   * More info about behaviour: https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
+   */
+  @HostListener('window:beforeunload', ['$event'])
+  handleClose(e: BeforeUnloadEvent): void {
+    if (!this.isSubmitted) e.returnValue = '';
   }
 
   /**

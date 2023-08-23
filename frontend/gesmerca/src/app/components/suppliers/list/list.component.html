@@ -1,6 +1,6 @@
 <h1 class="text-center">Proveedores</h1>
 <div *ngIf="authService.hasPermission('supplier-create')" class="text-center" style="padding: 15px">
-    <a routerLink="nuevo" class="btn btn-sm btn-success mb-2">Crear producto</a>
+    <a routerLink="nuevo" class="btn btn-sm btn-success mb-2">Crear proveedor</a>
 </div>
 <table *ngIf="authService.hasPermission('supplier-list')" class="table table-striped">
     <thead>
@@ -22,7 +22,7 @@
                 <a *ngIf="authService.hasPermission('supplier-edit')" routerLink="editar/{{supplier.id}}"
                     class="btn btn-sm btn-primary me-1">Ver/Editar</a>
                 <button *ngIf="authService.hasPermission('supplier-delete')"
-                    (click)="deleteProduct(supplier.name, supplier.id)" class="btn btn-sm btn-danger btn-delete-user"
+                    (click)="deleteSupplier(supplier.name, supplier.id)" class="btn btn-sm btn-danger btn-delete-user"
                     [disabled]="supplier.isDeleting">
                     <span *ngIf="" class="spinner-border spinner-border-sm"></span>
                     <span *ngIf="!supplier.isDeleting">Eliminar</span>

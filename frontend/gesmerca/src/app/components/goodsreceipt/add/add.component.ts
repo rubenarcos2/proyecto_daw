@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -53,6 +53,10 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
     private datePipe: DatePipe
   ) {}
 
+  /**
+   * This function start on event page
+   *
+   */
   ngOnInit(): void {
     this.dataForm = new FormData();
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
@@ -84,6 +88,7 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
       price: [null, Validators.required],
     });
 
+    //Get all suppliers of backend to fill combobox
     this.subs = this.supplierService.getAllNoPaginated().subscribe({
       next: result => {
         let res = JSON.parse(JSON.stringify(result));
@@ -96,6 +101,12 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This function execute on form submit
+   *
+   * Send form data to backend and create a new goods receipt with all your products
+   *
+   */
   onSubmit() {
     this.isSubmitted = true;
     this.dataForm.append('id', this.goodsReceiptForm.get('id')?.value);
@@ -104,6 +115,8 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
     this.dataForm.append('iduser', this.goodsReceiptForm.get('iduser')?.value);
     this.dataForm.append('date', this.changeFormatDate(this.goodsReceiptForm.get('date')?.value));
     this.dataForm.append('time', this.goodsReceiptForm.get('time')?.value);
+
+    //Create a new goods receipt on backend with form data
     this.subs2 = this.goodsReceiptService.create(this.dataForm).subscribe({
       next: result => {
         let res = JSON.parse(JSON.stringify(result));
@@ -138,6 +151,12 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This function execute on product form submit
+   *
+   * Add a new product to the goods receipt
+   *
+   */
   onSubmitProduct() {
     this.isSubmitted = true;
     this.dataProductForm = new FormData();
@@ -185,14 +204,24 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * This function execute on change event suppliers combobox
+   *
+   * Detect if value is changed and get all supplier's products
+   *
+   * @param  {Event} event The event combobox
+   */
   onChangeSuppliers(event: any) {
     let input = event.target.id;
     let index = (document.getElementById(input) as HTMLSelectElement).value;
     this._products = undefined;
+
+    //Get all products of backend
     this.subs4 = this.productService.getAllNoPaginated().subscribe({
       next: result => {
         let res = JSON.parse(JSON.stringify(result));
         this._products = res;
+        //Filter only supplier's products
         this._products = this._products?.filter(e => e.supplier == index);
         if (this.products?.length == 0) {
           document.getElementsByTagName('form')[1]?.setAttribute('hidden', 'true');
@@ -208,6 +237,13 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
     this._goodsReceiptProducts = [];
   }
 
+  /**
+   * This function execute on change event input
+   *
+   * Detect if input value is changed and set submited value on true change
+   *
+   * @param  {Event} event The event change input
+   */
   onChangeInput(event: any) {
     let input = event.target.id;
     this.isSubmitted = true;
@@ -224,6 +260,13 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * This function execute on change event product input
+   *
+   * Detect if event is fire and get the estimated price of AI
+   *
+   * @param  {Event} event The event change input
+   */
   onChangeInputProduct(event: any) {
     let cmbProd = document.getElementById('select-product') as HTMLSelectElement;
     let priceEst = document.getElementById('priceEst') as HTMLLabelElement;
@@ -236,6 +279,7 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
       );
       form.append('quantity', this.goodsReceiptProductForm.get('quantity')?.value);
 
+      //Get estimated price of backend that is calculated by AI
       this.subs6 = this.goodsReceiptService.getPriceEst(form).subscribe({
         next: result => {
           let res = JSON.parse(JSON.stringify(result));
@@ -248,6 +292,13 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * This function execute on change event date input
+   *
+   * Detect if the date is upper to now day
+   *
+   * @param  {FormControl} control The event form validate
+   */
   dateValidator(control: FormControl): { [key: string]: any } | null {
     if (control.value) {
       let date = control.value;
@@ -260,11 +311,20 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
     return null;
   }
 
+  /**
+   * Transform format date
+   */
   changeFormatDate(date: string): any {
     let d = new Date(date);
     return this.datePipe.transform(d, 'yyyy/MM/dd');
   }
 
+  /**
+   * This function execute on event delete button
+   *
+   * Detect if user confirm the action and proced to delete this product
+   *
+   */
   deleteProduct(name: any, id: any) {
     if (
       window.confirm(
@@ -274,11 +334,15 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
       this._goodsReceiptProducts = this._goodsReceiptProducts?.filter(e => e.idproduct != id);
       this._products = undefined;
       let supplier = (document.getElementById('select-supplier') as HTMLSelectElement).value;
+
+      //Get all products of backend
       this.subs5 = this.productService.getAllNoPaginated().subscribe({
         next: result => {
           let res = JSON.parse(JSON.stringify(result));
           this._products = res;
+          //Filter only supplier's products
           this._products = this._products?.filter(e => e.supplier == supplier);
+          //Delete products previously added to the goods receipt
           this._goodsReceiptProducts?.forEach(element => {
             this._products = this._products?.filter(e => e.id !== element.idproduct);
           });
@@ -289,6 +353,18 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
         },
       });
     }
+  }
+
+  /**
+   * This function start on refresh or close window/tab navigator
+   *
+   * Detect if there are changes without save
+   *
+   * More info about behaviour: https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
+   */
+  @HostListener('window:beforeunload', ['$event'])
+  handleClose(e: BeforeUnloadEvent): void {
+    if (!this.isSubmitted) e.returnValue = '';
   }
 
   /**

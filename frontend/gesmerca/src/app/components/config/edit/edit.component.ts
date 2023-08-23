@@ -28,10 +28,18 @@ export class ConfigGeneralEditComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
+  /**
+   * This function start on event page
+   *
+   * Get a config of the backend with id received by url's parameter
+   *
+   */
   ngOnInit(): void {
     let id;
     this.dataForm = new FormData();
     this.route.params.subscribe(param => (id = parseInt(param['id'])));
+
+    //Get a config of backend by id
     this.subs = this.configService.getById(id).subscribe({
       next: result => {
         this._config = result;
@@ -50,6 +58,12 @@ export class ConfigGeneralEditComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This function execute on form submit
+   *
+   * Send form data to backend and modify this config
+   *
+   */
   onSubmit() {
     this.isSubmitted = true;
     this.dataForm.append('name', this.configForm.get('name')?.value);
@@ -58,6 +72,7 @@ export class ConfigGeneralEditComponent implements OnInit, OnDestroy {
     this.dataForm.append('domain', this.configForm.get('domain')?.value);
     this.dataForm.append('value', this.configForm.get('value')?.value);
 
+    //Update a config to backend with form data
     this.subs2 = this.configService.update(this.dataForm).subscribe({
       next: result => {
         let res = JSON.parse(JSON.stringify(result));
@@ -73,6 +88,12 @@ export class ConfigGeneralEditComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This function execute on change event input
+   *
+   * Detect if input value is changed and set submited value on true change
+   *
+   */
   onChangeInput(event: any) {
     let input = event.target.id;
     this.isSubmitted = true;

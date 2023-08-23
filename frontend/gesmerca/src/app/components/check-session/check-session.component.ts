@@ -25,6 +25,10 @@ export class CheckSessionComponent implements OnInit, OnDestroy {
     this.element = el.nativeElement;
   }
 
+  /**
+   * This function start on event page
+   *
+   */
   ngOnInit() {
     // add self (this modal instance) to the modal service so it can be opened from any component
     this.checkSessionService.add(this);
@@ -35,6 +39,12 @@ export class CheckSessionComponent implements OnInit, OnDestroy {
     this.element.style.display = 'none';
   }
 
+  /**
+   * This function start on destroy event page
+   *
+   * Remove this component
+   *
+   */
   ngOnDestroy() {
     // remove self from modal service
     this.checkSessionService.remove(this);
@@ -43,12 +53,20 @@ export class CheckSessionComponent implements OnInit, OnDestroy {
     this.element.remove();
   }
 
+  /**
+   * Set visible this component
+   *
+   */
   open() {
     this.element.style.display = 'block';
     document.body.classList.add('checkSession-modal-open');
     this.isOpen = true;
   }
 
+  /**
+   * Set hidden this component
+   *
+   */
   close() {
     this.element.style.display = 'none';
     document.body.classList.remove('checkSession-modal-open');

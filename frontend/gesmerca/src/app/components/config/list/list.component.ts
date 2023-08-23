@@ -26,6 +26,12 @@ export class ConfigListComponent implements OnInit, OnDestroy {
     private toastr: ToastrService
   ) {}
 
+  /**
+   * This function start on event page
+   *
+   * Get all user's config of the backend
+   *
+   */
   ngOnInit(): void {
     this.subs = this.authService.profile().subscribe({
       complete: () => {
@@ -54,6 +60,12 @@ export class ConfigListComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This function execute on change event checkbox
+   *
+   * Detect if delete or update this config
+   *
+   */
   onChangeCheckActive(event: any) {
     let name = event.target.id.substring('check-'.length);
     let check = document.getElementById(event.target.id);
@@ -95,6 +107,12 @@ export class ConfigListComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * This function execute on change event checkbox value
+   *
+   * Detect if update value of this config
+   *
+   */
   onChangeCheckValue(event: any) {
     let name = event.target.id.substring('switch-'.length);
     let dataForm = new FormData();
@@ -115,6 +133,20 @@ export class ConfigListComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Join general configs and user's config
+   *
+   */
+  mixConfigsSpecifyWithGeneral(): void {
+    this._configsGeneral.forEach(configGeneral => {
+      let exist = false;
+      this._configs.forEach(config => {
+        if (config.name === configGeneral.name) exist = true;
+      });
+      if (!exist) this.configs.push(configGeneral);
+    });
+  }
+
+  /**
    * This function start on destroy event page
    *
    * Unsuscribe all observable suscriptions
@@ -129,15 +161,5 @@ export class ConfigListComponent implements OnInit, OnDestroy {
 
   get configs(): Config[] {
     return this._configs;
-  }
-
-  mixConfigsSpecifyWithGeneral(): void {
-    this._configsGeneral.forEach(configGeneral => {
-      let exist = false;
-      this._configs.forEach(config => {
-        if (config.name === configGeneral.name) exist = true;
-      });
-      if (!exist) this.configs.push(configGeneral);
-    });
   }
 }

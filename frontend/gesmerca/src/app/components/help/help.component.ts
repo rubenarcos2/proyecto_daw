@@ -19,6 +19,12 @@ export class HelpComponent implements OnInit, OnDestroy {
     this.element = el.nativeElement;
   }
 
+  /**
+   * This function start on event page
+   *
+   * Initialize this component and event listener on click button to open
+   *
+   */
   ngOnInit() {
     // add self (this modal instance) to the modal service so it can be opened from any component
     this.helpService.add(this);
@@ -36,14 +42,10 @@ export class HelpComponent implements OnInit, OnDestroy {
     this.element.style.display = 'none';
   }
 
-  ngOnDestroy() {
-    // remove self from modal service
-    this.helpService.remove(this);
-
-    // remove modal element from html
-    this.element.remove();
-  }
-
+  /**
+   * Set visible this component
+   *
+   */
   open() {
     this.changeSrcVideo();
     this.element.style.display = 'block';
@@ -51,6 +53,10 @@ export class HelpComponent implements OnInit, OnDestroy {
     this.isOpen = true;
   }
 
+  /**
+   * Set hidden this component
+   *
+   */
   close() {
     (document.getElementById('help-video') as HTMLVideoElement).pause();
     this.element.style.display = 'none';
@@ -58,6 +64,10 @@ export class HelpComponent implements OnInit, OnDestroy {
     this.isOpen = false;
   }
 
+  /**
+   * Detect from url the name of help's video
+   *
+   */
   changeSrcVideo() {
     this.element.style.display = 'none';
     //Load video url from url navigation bar
@@ -76,5 +86,19 @@ export class HelpComponent implements OnInit, OnDestroy {
     this.mp4url = videoSrc + videoName + '.mp4';
     this.webmurl = videoSrc + videoName + '.webm';
     (document.getElementById('help-video') as HTMLVideoElement).load();
+  }
+
+  /**
+   * This function start on destroy event page
+   *
+   * Unsuscribe all observable suscriptions
+   *
+   */
+  ngOnDestroy() {
+    // remove self from modal service
+    this.helpService.remove(this);
+
+    // remove modal element from html
+    this.element.remove();
   }
 }

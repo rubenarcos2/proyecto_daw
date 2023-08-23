@@ -19,7 +19,12 @@ export class ProductListComponent implements OnInit, OnDestroy {
     public authService: AuthService
   ) {}
 
+  /**
+   * This function start on event page
+   *
+   */
   ngOnInit() {
+    //Get all products of backend
     this.subs = this.productService
       .getAll()
       .pipe(first())
@@ -35,11 +40,20 @@ export class ProductListComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * This function execute on event delete button
+   *
+   * Detect if user confirm the action and proced to delete this product
+   *
+   */
   deleteProduct(name: any, id: any) {
     if (window.confirm('¿Seguro que desea borrar el producto ' + name + '?')) {
       const product = this.products!.find(x => x.id === id);
+
+      //Get all products of backend
       this.subs2 = this.productService.delete(product).subscribe({
         next: result => {
+          //Filter only selected product
           this._products = this.products!.filter(x => x.id !== id);
           let msg = JSON.parse(JSON.stringify(result));
           this.toastr.success(msg.message);
@@ -51,12 +65,20 @@ export class ProductListComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * When load image remove spinner
+   */
   onLoadImg(event: any) {
     event.srcElement.classList = '';
   }
 
+  /**
+   * Get a group of goods receipt of paginate selected
+   */
   onChangePagination(event: any): void {
     event.preventDefault();
+
+    //Get all products paginated
     this.subs3 = this.productService
       .getAll(event.target.href.split('?')[1])
       .pipe(first())

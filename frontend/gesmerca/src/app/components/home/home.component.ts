@@ -17,7 +17,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(private productService: ProductService, private toastr: ToastrService) {}
 
+  /**
+   * This function start on event page
+   *
+   * Load y fill init page all products
+   *
+   */
   ngOnInit(): void {
+    //Get all products of backend
     this.subs = this.productService
       .getAll()
       .pipe(first())
@@ -33,10 +40,16 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Unset css class on load event image
+   */
   onLoadImg(event: any): void {
     event.srcElement.classList = '';
   }
 
+  /**
+   * Get a group of goods receipt of paginate selected
+   */
   onChangePagination(event: any): void {
     event.preventDefault();
     this.subs2 = this.productService

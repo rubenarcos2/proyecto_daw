@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -51,6 +51,10 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
     private datePipe: DatePipe
   ) {}
 
+  /**
+   * This function start on event page
+   *
+   */
   ngOnInit(): void {
     let id;
     this.dataForm = new FormData();
@@ -59,10 +63,13 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
     this.router.onSameUrlNavigation = 'reload';
 
     this.route.params.subscribe(param => (id = parseInt(param['id'])));
+
+    //Get a goods receipt by the id received by url's param
     this.subs = this.goodsReceiptService.getById(id).subscribe({
       next: result => {
         this._goodsReceipt = result;
 
+        //Get supplier's data of backend
         this.subs = this.supplierService.getById(this.goodsReceipt?.idsupplier).subscribe({
           next: result => {
             this._goodsReceipt!.supplierName = result.name;
@@ -113,11 +120,14 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
         this.toastr.error(error ? error : 'Operación no autorizada');
       },
     });
+
+    //Get all products of this goods receipt of backend
     this.subs3 = this.goodsReceiptService.getProducts(id).subscribe({
       next: result => {
         let res = JSON.parse(JSON.stringify(result));
         this._goodsReceiptProducts = res;
         this._goodsReceiptProducts?.forEach(e => {
+          //Get a product data of backend by id
           this.subs4 = this.productService.getById(e.idproduct).subscribe({
             next: result => {
               let res = JSON.parse(JSON.stringify(result));
@@ -134,10 +144,13 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
         this.toastr.error(error ? error : 'Operación no autorizada');
       },
     });
+
+    //Get all products of backend
     this.subs5 = this.productService.getAllNoPaginated().subscribe({
       next: result => {
         let res = JSON.parse(JSON.stringify(result));
         this._products = res;
+        //Filter only supplier's products
         this._products = this._products?.filter(e => e.supplier == this.goodsReceipt?.idsupplier);
         if (this.products?.length == 0)
           document.getElementsByTagName('form')[1]?.setAttribute('hidden', 'true');
@@ -148,6 +161,12 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This function execute on form submit
+   *
+   * Send form data to backend and modify all data of the new goods receipt with all your products
+   *
+   */
   onSubmit() {
     this.isSubmitted = true;
     this.dataForm.append('id', this.goodsReceiptForm.get('id')?.value);
@@ -156,6 +175,8 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
     this.dataForm.append('iduser', this.goodsReceiptForm.get('iduser')?.value);
     this.dataForm.append('date', this.changeFormatDate(this.goodsReceiptForm.get('date')?.value));
     this.dataForm.append('time', this.goodsReceiptForm.get('time')?.value);
+
+    //Update the goods receipt's data
     this.subs6 = this.goodsReceiptService
       .update(this.dataForm, this.goodsReceiptForm.get('id')?.value)
       .subscribe({
@@ -173,6 +194,12 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This function execute on product form submit
+   *
+   * Send form data to backend and add a product to this goods receipt
+   *
+   */
   onSubmitProduct() {
     this.isSubmitted = true;
     this.dataProductForm.append(
@@ -188,6 +215,8 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
       'price',
       String(this.goodsReceiptProductForm.get('price')?.value).replace(/,/g, '.')
     );
+
+    //Add a product to this goods receipt
     this.subs7 = this.goodsReceiptService
       .addProduct(this.dataProductForm, this.goodsReceipt?.id)
       .subscribe({
@@ -205,6 +234,12 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This function execute on change event input
+   *
+   * Detect if input value is changed and set submited value on true change
+   *
+   */
   onChangeInput(event: any) {
     let input = event.target.id;
     this.isSubmitted = true;
@@ -221,6 +256,12 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * This function execute on change event product input
+   *
+   * Detect if event is fire and get the estimated price of AI
+   *
+   */
   onChangeInputProduct(event: any) {
     let cmbProd = document.getElementById('select-product') as HTMLSelectElement;
     let priceEst = document.getElementById('priceEst') as HTMLLabelElement;
@@ -233,6 +274,7 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
       );
       form.append('quantity', this.goodsReceiptProductForm.get('quantity')?.value);
 
+      //Get estimated price of backend that is calculated by AI
       this.subs8 = this.goodsReceiptService.getPriceEst(form).subscribe({
         next: result => {
           let res = JSON.parse(JSON.stringify(result));
@@ -245,6 +287,12 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * This function execute on change event date input
+   *
+   * Detect if the date is upper to now day
+   *
+   */
   dateValidator(control: FormControl): { [key: string]: any } | null {
     if (control.value) {
       let date = control.value;
@@ -262,6 +310,12 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
     return this.datePipe.transform(d, 'yyyy/MM/dd');
   }
 
+  /**
+   * This function execute on event delete button
+   *
+   * Detect if user confirm the action and proced to delete this product
+   *
+   */
   deleteProduct(name: any, id: any) {
     if (
       window.confirm(
@@ -274,6 +328,8 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
         'quantity',
         String(this.goodsReceiptProducts?.find(e => e.id == id)?.quantity)
       );
+
+      //Delete this product of this goods receipt
       this.subs2 = this.goodsReceiptService.deleteProduct(dataDeleteProdForm, id).subscribe({
         next: result => {
           let msg = JSON.parse(JSON.stringify(result));
@@ -285,6 +341,18 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
         },
       });
     }
+  }
+
+  /**
+   * This function start on refresh or close window/tab navigator
+   *
+   * Detect if there are changes without save
+   *
+   * More info about behaviour: https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
+   */
+  @HostListener('window:beforeunload', ['$event'])
+  handleClose(e: BeforeUnloadEvent): void {
+    if (!this.isSubmitted) e.returnValue = '';
   }
 
   /**

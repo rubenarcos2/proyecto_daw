@@ -26,11 +26,20 @@ export class GoodsReceiptListComponent implements OnInit, OnDestroy {
     public authService: AuthService
   ) {}
 
+  /**
+   * This function start on event page
+   *
+   */
   ngOnInit() {
     this.getSupliersAndUsers();
   }
 
+  /**
+   * Get all suppliers and users of backend
+   *
+   */
   getSupliersAndUsers() {
+    //Get all goods receipt
     this.subs = this.goodsReceiptService
       .getAll()
       .pipe(first())
@@ -40,6 +49,7 @@ export class GoodsReceiptListComponent implements OnInit, OnDestroy {
           this._links = res.links;
           this._goodsReceipt = res.data;
           this.goodsreceipts!.forEach(e => {
+            //Get all suppliers by id
             this.subs = this.supplierService.getById(e.idsupplier).subscribe({
               next: result => {
                 e.supplierName = result.name;
@@ -49,6 +59,8 @@ export class GoodsReceiptListComponent implements OnInit, OnDestroy {
               },
             });
           });
+
+          //Get all users of backend
           this.subs2 = this.authService.getAllUsers().subscribe({
             next: result => {
               let res = JSON.parse(JSON.stringify(result));
@@ -68,6 +80,12 @@ export class GoodsReceiptListComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * This function execute on event delete button
+   *
+   * Detect if user confirm the action and proced to delete this goods receipt
+   *
+   */
   deleteProduct(name: any, id: any) {
     if (
       window.confirm('¿Seguro que desea borrar el albarán de recepción de mercancía ' + name + '?')
@@ -86,12 +104,13 @@ export class GoodsReceiptListComponent implements OnInit, OnDestroy {
     }
   }
 
-  onLoadImg(event: any) {
-    event.srcElement.classList = '';
-  }
-
+  /**
+   * Get a group of goods receipt of paginate selected
+   */
   onChangePagination(event: any): void {
     event.preventDefault();
+
+    //Get all goods receipt paginated
     this.subs6 = this.goodsReceiptService
       .getAll(event.target.href.split('?')[1])
       .pipe(first())

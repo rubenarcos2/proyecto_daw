@@ -22,6 +22,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
+  /**
+   * This function start on event page
+   *
+   */
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -30,6 +34,12 @@ export class RegisterComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This function execute on form submit
+   *
+   * Send form data to backend and register the new user data
+   *
+   */
   onSubmit() {
     this.isSubmitted = true;
     this.subs = this.authService.register(this.registerForm.value).subscribe({

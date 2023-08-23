@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -24,6 +24,10 @@ export class SupplierAddComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
+  /**
+   * This function start on event page
+   *
+   */
   ngOnInit(): void {
     this.dataForm = new FormData();
     this.supplierForm = this.formBuilder.group({
@@ -39,6 +43,12 @@ export class SupplierAddComponent implements OnInit, OnDestroy {
     this.isSubmitted = true;
   }
 
+  /**
+   * This function execute on form submit
+   *
+   * Send form data to backend and create a new supplier
+   *
+   */
   onSubmit() {
     this.isSubmitted = true;
     this.dataForm.append('id', this.supplierForm.get('id')?.value);
@@ -50,6 +60,8 @@ export class SupplierAddComponent implements OnInit, OnDestroy {
     this.dataForm.append('email', this.supplierForm.get('email')?.value);
     this.dataForm.append('web', this.supplierForm.get('web')?.value);
     this.dataForm.append('notes', this.supplierForm.get('notes')?.value);
+
+    //Send a new supplier to backend
     this.subs = this.supplierService.create(this.dataForm).subscribe({
       next: result => {
         let res = JSON.parse(JSON.stringify(result));
@@ -64,6 +76,18 @@ export class SupplierAddComponent implements OnInit, OnDestroy {
     this.subs.add(() => {
       this.isSubmitted = false;
     });
+  }
+
+  /**
+   * This function start on refresh or close window/tab navigator
+   *
+   * Detect if there are changes without save
+   *
+   * More info about behaviour: https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
+   */
+  @HostListener('window:beforeunload', ['$event'])
+  handleClose(e: BeforeUnloadEvent): void {
+    if (this.isSubmitted) e.returnValue = '';
   }
 
   /**

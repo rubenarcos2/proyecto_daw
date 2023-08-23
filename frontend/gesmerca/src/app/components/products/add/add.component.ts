@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -29,6 +29,10 @@ export class ProductAddComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
+  /**
+   * This function start on event page
+   *
+   */
   ngOnInit(): void {
     this.dataForm = new FormData();
     this.productForm = this.formBuilder.group({
@@ -40,6 +44,8 @@ export class ProductAddComponent implements OnInit, OnDestroy {
       stock: ['', Validators.required],
     });
     this.isSubmitted = true;
+
+    //Get all suppliers of backend
     this.subs = this.supplierService.getAllNoPaginated().subscribe({
       next: result => {
         let res = JSON.parse(JSON.stringify(result));
@@ -51,6 +57,12 @@ export class ProductAddComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This function execute on form submit
+   *
+   * Send form data to backend and create a new product
+   *
+   */
   onSubmit() {
     this.isSubmitted = true;
     this.dataForm.append('name', this.productForm.get('name')?.value);
@@ -58,6 +70,8 @@ export class ProductAddComponent implements OnInit, OnDestroy {
     this.dataForm.append('supplier', this.productForm.get('supplier')?.value);
     this.dataForm.append('price', this.productForm.get('price')?.value.replace(/,/g, '.'));
     this.dataForm.append('stock', this.productForm.get('stock')?.value);
+
+    //Send a new product to create of backend
     this.subs2 = this.productService.create(this.dataForm).subscribe({
       next: result => {
         let res = JSON.parse(JSON.stringify(result));
@@ -73,9 +87,26 @@ export class ProductAddComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * On event input file append a new image
+   *
+   * @param  {any} file The input file
+   */
   onChangeFile(file: any) {
     this.dataForm.append('image', file.target.files[0], file.name);
     this.isSubmitted = true;
+  }
+
+  /**
+   * This function start on refresh or close window/tab navigator
+   *
+   * Detect if there are changes without save
+   *
+   * More info about behaviour: https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
+   */
+  @HostListener('window:beforeunload', ['$event'])
+  handleClose(e: BeforeUnloadEvent): void {
+    if (!this.isSubmitted) e.returnValue = '';
   }
 
   /**
