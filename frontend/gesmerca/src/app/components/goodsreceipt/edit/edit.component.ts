@@ -114,13 +114,16 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
     //Get all products of backend
     this.subs5 = this.productService.getAllNoPaginated().subscribe({
       next: result => {
+        let prod: Product[];
         let res = JSON.parse(JSON.stringify(result));
-        this._products = res;
+        prod = res;
         //Filter only supplier's products
-        this._products = this._products?.filter(e => e.supplier == this.goodsReceipt?.idsupplier);
+        prod = prod?.filter(e => e.supplier == this.goodsReceipt?.idsupplier);
+        //Filter only products not included on goods receipt
         this.goodsReceiptProducts?.forEach(grp => {
-          this._products = this._products?.filter(e => e.id !== grp.idproduct);
+          prod = prod?.filter(e => e.id !== grp.idproduct);
         });
+        this._products = prod;
         if (this.products?.length == 0)
           document.getElementsByTagName('form')[1]?.setAttribute('hidden', 'true');
       },
