@@ -71,6 +71,10 @@ class GoodsReceiptController extends Controller
     {        
         try{
             $goodReceipt = GoodsReceipt::find($id);
+            foreach ($goodReceipt->products as $product) {
+                $supplierProduct = Product::find($product->idproduct);
+                $product->nameproduct = $supplierProduct->name;
+            }
             return response()->json($goodReceipt->products);
         }catch(\Exception $e){
             return response()->json(['error' => $e->getMessage()]);

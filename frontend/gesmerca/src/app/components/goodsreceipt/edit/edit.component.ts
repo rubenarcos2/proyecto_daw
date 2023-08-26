@@ -118,6 +118,9 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
         this._products = res;
         //Filter only supplier's products
         this._products = this._products?.filter(e => e.supplier == this.goodsReceipt?.idsupplier);
+        this.goodsReceiptProducts?.forEach(grp => {
+          this._products = this._products?.filter(e => e.id !== grp.idproduct);
+        });
         if (this.products?.length == 0)
           document.getElementsByTagName('form')[1]?.setAttribute('hidden', 'true');
       },
