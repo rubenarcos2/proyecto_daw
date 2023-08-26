@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\GoodsReceipt;
 use App\Models\GoodsReceiptProduct;
 use App\Models\Product;
+use App\Models\Supplier;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -33,6 +35,12 @@ class GoodsReceiptController extends Controller
             App::setLocale('es');
             session()->put('locale', 'es');  
             $goodReceipts = GoodsReceipt::orderBy('date', 'desc')->paginate(8);
+            foreach ($goodReceipts as $goodReceipt) {
+                $supplier = Supplier::find($goodReceipt->idsupplier);
+                $user = User::find($goodReceipt->iduser);
+                $goodReceipt->supplierName = $supplier->name;
+                $goodReceipt->userName = $user->name;
+            }
             return response()->json($goodReceipts);
         }catch(\Exception $e){
             return response()->json(['error' => $e->getMessage()]);
@@ -46,6 +54,10 @@ class GoodsReceiptController extends Controller
     {        
         try{
             $goodReceipt = GoodsReceipt::find($id);
+            $supplier = Supplier::find($goodReceipt->idsupplier);
+            $user = User::find($goodReceipt->iduser);
+            $goodReceipt->supplierName = $supplier->name;
+            $goodReceipt->userName = $user->name;
             return response()->json($goodReceipt);
         }catch(\Exception $e){
             return response()->json(['error' => $e->getMessage()]);
@@ -60,6 +72,25 @@ class GoodsReceiptController extends Controller
         try{
             $goodReceipt = GoodsReceipt::find($id);
             return response()->json($goodReceipt->products);
+        }catch(\Exception $e){
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Display a listing of the all Good Receipts.
+     */
+    public function all()
+    {
+        try{
+            $goodReceipts = GoodsReceipt::all();
+            foreach ($goodReceipts as $goodReceipt) {
+                $supplier = Supplier::find($goodReceipt->idsupplier);
+                $user = User::find($goodReceipt->iduser);
+                $goodReceipt->supplierName = $supplier->name;
+                $goodReceipt->userName = $user->name;
+            }
+            return response()->json($goodReceipts);
         }catch(\Exception $e){
             return response()->json(['error' => $e->getMessage()]);
         }

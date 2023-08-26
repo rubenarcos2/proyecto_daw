@@ -2,6 +2,9 @@
 <div *ngIf="authService.hasPermission('product-create')" class="text-center" style="padding: 15px">
     <a routerLink="nuevo" class="btn btn-sm btn-success mb-2">Crear producto</a>
 </div>
+<button id="report-pdf" class="btn-secondary btn-sm mb-2" (click)="productsToPDF()" [disabled]="isPrintingPDF">
+    <span *ngIf="isPrintingPDF" class="spinner-border spinner-border-sm"></span>
+    <span *ngIf="!isPrintingPDF">Descargar informe PDF</span></button>
 <table *ngIf="authService.hasPermission('product-list')" class="table table-striped">
     <thead>
         <tr>

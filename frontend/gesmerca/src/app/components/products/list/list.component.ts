@@ -4,17 +4,27 @@ import { ProductService } from 'src/app/services/product.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
 import { Subscription, first } from 'rxjs';
+import jsPDF, { CellConfig } from 'jspdf';
+import { SupplierService } from 'src/app/services/supplier.service';
+import autoTable, { ColumnInput } from 'jspdf-autotable';
 
-@Component({ templateUrl: 'list.component.html' })
+@Component({
+  templateUrl: './list.component.html',
+  styleUrls: ['./list.component.css'],
+})
 export class ProductListComponent implements OnInit, OnDestroy {
   private _products?: Product[];
   private _links?: any[];
+  protected isPrintingPDF = false;
   private subs: Subscription = new Subscription();
   private subs2: Subscription = new Subscription();
   private subs3: Subscription = new Subscription();
+  private subs4: Subscription = new Subscription();
+  private subs5: Subscription = new Subscription();
 
   constructor(
     private productService: ProductService,
+    private supplierService: SupplierService,
     private toastr: ToastrService,
     public authService: AuthService
   ) {}
@@ -95,6 +105,110 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Get all products and send to generate PDF
+   *
+   */
+  productsToPDF() {
+    this.isPrintingPDF = true;
+
+    //Get all products of backend
+    this.subs4 = this.productService.getAllNoPaginated().subscribe({
+      next: result => {
+        let products = JSON.parse(JSON.stringify(result));
+        products.sort((a: { id: number }, b: { id: number }) => a.id - b.id);
+        let index = 0;
+        products.forEach((prod: { stock: string; supplier: string; image: any; id: string }) => {
+          delete prod.image;
+          prod.id = String(prod.id);
+          prod.supplier = String(prod.supplier);
+          prod.stock = String(prod.stock);
+
+          this.subs5 = this.supplierService.getById(prod.id).subscribe({
+            next: result => {
+              let res = JSON.parse(JSON.stringify(result));
+              prod.supplier = String(res.name);
+              if (index == products.length - 1) {
+                this.generatePDF(products);
+                this.isPrintingPDF = false;
+              }
+              index++;
+            },
+            error: error => {
+              this.toastr.error(error ? error : 'No se puede conectar con el servidor');
+            },
+          });
+        });
+      },
+      error: error => {
+        this.toastr.error(error ? error : 'No se puede conectar con el servidor');
+      },
+    });
+  }
+
+  /**
+   * Generate PDF document with jspdf library
+   *
+   */
+  generatePDF(products: any) {
+    let doc = new jsPDF({ putOnlyUsedFonts: true, orientation: 'portrait' });
+
+    let pages = doc.getNumberOfPages();
+    let pageWidth = doc.internal.pageSize.width; //Optional
+    let pageHeight = doc.internal.pageSize.height; //Optional
+
+    //Parser of table's columns name
+    let columns: ColumnInput[] = [
+      {
+        title: 'Código',
+        key: 'id',
+      },
+      {
+        title: 'Nombre',
+        key: 'name',
+      },
+      {
+        title: 'Descripción',
+        key: 'description',
+      },
+      {
+        title: 'Proveedor',
+        key: 'supplier',
+      },
+      {
+        title: 'Precio',
+        key: 'price',
+      },
+      {
+        title: 'Stock',
+        key: 'stock',
+      },
+    ];
+
+    autoTable(doc, {
+      columns: columns,
+      body: products,
+      margin: { top: 25 },
+      headStyles: { fillColor: [253, 199, 60], textColor: 'black' },
+    });
+
+    pages = doc.getNumberOfPages();
+
+    //Footer with page number
+    for (let j = 1; j < pages + 1; j++) {
+      let horizontalPos = pageWidth / 2; //Can be fixed number
+      let verticalPos = pageHeight - 5; //Can be fixed number
+      doc.setFontSize(10);
+      doc.text('Informe de todos los productos', pageWidth / 2, 15, { align: 'center' });
+      doc.addImage('../../assets/img/icons/gesmerca.png', 'PNG', 190, 5, 15, 15);
+
+      doc.setPage(j);
+      doc.text(`${j} de ${pages}`, horizontalPos, verticalPos, { align: 'center' });
+    }
+
+    doc.save('listado_productos.pdf');
+  }
+
+  /**
    * This function start on destroy event page
    *
    * Unsuscribe all observable suscriptions
@@ -104,6 +218,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.subs.unsubscribe();
     this.subs2.unsubscribe();
     this.subs3.unsubscribe();
+    this.subs4.unsubscribe();
+    this.subs5.unsubscribe();
   }
 
   get products() {

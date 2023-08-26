@@ -4,26 +4,33 @@ import { Subscription, first } from 'rxjs';
 import { GoodsreceiptService } from 'src/app/services/goodsreceipt.service';
 import { GoodsReceipt } from 'src/app/models/goodsreceipt';
 import { AuthService } from 'src/app/services/auth.service';
-import { SupplierService } from 'src/app/services/supplier.service';
-import { User } from 'src/app/models/user';
-import { GoodsReceiptProduct } from 'src/app/models/goodsreceiptproduct';
+import { DatePipe } from '@angular/common';
+import autoTable, { ColumnInput } from 'jspdf-autotable';
+import jsPDF from 'jspdf';
 
-@Component({ templateUrl: 'list.component.html' })
+@Component({
+  templateUrl: './list.component.html',
+  styleUrls: ['./list.component.css'],
+})
 export class GoodsReceiptListComponent implements OnInit, OnDestroy {
   private _goodsReceipt?: GoodsReceipt[];
   private _links?: any[];
+  protected isPrintingPDF = false;
   private subs: Subscription = new Subscription();
   private subs2: Subscription = new Subscription();
   private subs3: Subscription = new Subscription();
   private subs4: Subscription = new Subscription();
   private subs5: Subscription = new Subscription();
   private subs6: Subscription = new Subscription();
+  private subs7: Subscription = new Subscription();
+  private subs8: Subscription = new Subscription();
+  private subs9: Subscription = new Subscription();
 
   constructor(
     private goodsReceiptService: GoodsreceiptService,
-    private supplierService: SupplierService,
     private toastr: ToastrService,
-    public authService: AuthService
+    public authService: AuthService,
+    private datePipe: DatePipe
   ) {}
 
   /**
@@ -31,14 +38,6 @@ export class GoodsReceiptListComponent implements OnInit, OnDestroy {
    *
    */
   ngOnInit() {
-    this.getSupliersAndUsers();
-  }
-
-  /**
-   * Get all suppliers and users of backend
-   *
-   */
-  getSupliersAndUsers() {
     //Get all goods receipt
     this.subs = this.goodsReceiptService
       .getAll()
@@ -48,31 +47,6 @@ export class GoodsReceiptListComponent implements OnInit, OnDestroy {
           let res = JSON.parse(JSON.stringify(result));
           this._links = res.links;
           this._goodsReceipt = res.data;
-          this.goodsreceipts!.forEach(e => {
-            //Get all suppliers by id
-            this.subs = this.supplierService.getById(e.idsupplier).subscribe({
-              next: result => {
-                e.supplierName = result.name;
-              },
-              error: error => {
-                this.toastr.error(error ? error : 'Operación no autorizada');
-              },
-            });
-          });
-
-          //Get all users of backend
-          this.subs2 = this.authService.getAllUsers().subscribe({
-            next: result => {
-              let res = JSON.parse(JSON.stringify(result));
-              let users: User[] = res;
-              this._goodsReceipt!.forEach(e => {
-                e.userName = users.filter(el => e.iduser == el.id)[0]?.name;
-              });
-            },
-            error: error => {
-              this.toastr.error(error ? error : 'Operación no autorizada');
-            },
-          });
         },
         error: error => {
           this.toastr.error(error ? error : 'No se puede conectar con el servidor');
@@ -119,12 +93,106 @@ export class GoodsReceiptListComponent implements OnInit, OnDestroy {
           let res = JSON.parse(JSON.stringify(result));
           this._links = res.links;
           this._goodsReceipt = res.data;
-          this.getSupliersAndUsers();
         },
         error: error => {
           this.toastr.error(error ? error : 'No se puede conectar con el servidor');
         },
       });
+  }
+
+  /**
+   * Get all suppliers and send to generate PDF
+   *
+   */
+  goodsreceiptToPDF() {
+    this.isPrintingPDF = true;
+
+    //Get all goodsReceipt of backend
+    this.subs7 = this.goodsReceiptService.getAllNoPaginated().subscribe({
+      next: result => {
+        let goodsReceipt = JSON.parse(JSON.stringify(result));
+        goodsReceipt.sort((a: { date: Date }, b: { date: Date }) => {
+          if (a.date < b.date) {
+            return 1;
+          } else if (a.date > b.date) {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
+        goodsReceipt.forEach((gr: { date: string | number | Date | null }) => {
+          gr.date = this.datePipe.transform(gr.date, 'dd/MM/yyyy');
+        });
+        this.generatePDF(goodsReceipt);
+        this.isPrintingPDF = false;
+      },
+      error: error => {
+        this.toastr.error(error ? error : 'No se puede conectar con el servidor');
+      },
+    });
+  }
+
+  /**
+   * Generate PDF document with jspdf library
+   *
+   */
+  generatePDF(goodsReceipt: any) {
+    let doc = new jsPDF({ putOnlyUsedFonts: true, orientation: 'landscape' });
+
+    let pages = doc.getNumberOfPages();
+    let pageWidth = doc.internal.pageSize.width; //Optional
+    let pageHeight = doc.internal.pageSize.height; //Optional
+
+    let columns: ColumnInput[] = [
+      {
+        title: 'Código',
+        key: 'id',
+      },
+      {
+        title: 'Núm. doc.',
+        key: 'docnum',
+      },
+      {
+        title: 'Proveedor',
+        key: 'supplierName',
+      },
+      {
+        title: 'Usuario',
+        key: 'userName',
+      },
+      {
+        title: 'Fecha',
+        key: 'date',
+      },
+      {
+        title: 'Hora',
+        key: 'time',
+      },
+    ];
+    autoTable(doc, {
+      columns: columns,
+      body: goodsReceipt,
+      margin: { top: 25 },
+      headStyles: { fillColor: [253, 199, 60], textColor: 'black' },
+    });
+
+    pages = doc.getNumberOfPages();
+
+    //Footer with page number
+    for (let j = 1; j < pages + 1; j++) {
+      let horizontalPos = pageWidth / 2; //Can be fixed number
+      let verticalPos = pageHeight - 5; //Can be fixed number
+      doc.setFontSize(10);
+      doc.text('Informe de todos los albaranes de recepción de mercancía', pageWidth / 2, 15, {
+        align: 'center',
+      });
+      doc.addImage('../../assets/img/icons/gesmerca.png', 'PNG', 275, 5, 15, 15);
+
+      doc.setPage(j);
+      doc.text(`${j} de ${pages}`, horizontalPos, verticalPos, { align: 'center' });
+    }
+
+    doc.save('listado_albaranes_recepcion_mercancia.pdf');
   }
 
   /**
@@ -140,6 +208,9 @@ export class GoodsReceiptListComponent implements OnInit, OnDestroy {
     this.subs4.unsubscribe();
     this.subs5.unsubscribe();
     this.subs6.unsubscribe();
+    this.subs7.unsubscribe();
+    this.subs8.unsubscribe();
+    this.subs9.unsubscribe();
   }
 
   get goodsreceipts() {

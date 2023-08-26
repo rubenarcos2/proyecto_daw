@@ -69,52 +69,31 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
       next: result => {
         this._goodsReceipt = result;
 
-        //Get supplier's data of backend
-        this.subs = this.supplierService.getById(this.goodsReceipt?.idsupplier).subscribe({
-          next: result => {
-            this._goodsReceipt!.supplierName = result.name;
-            this.subs2 = this.authService.getAllUsers().subscribe({
-              next: result => {
-                let res = JSON.parse(JSON.stringify(result));
-                let users: User[] = res;
-                this.goodsReceipt!.userName = users.filter(
-                  e => e.id == this.goodsReceipt?.iduser
-                )[0].name;
-                this.goodsReceiptForm = this.formBuilder.group({
-                  id: [this.goodsReceipt?.id],
-                  docnum: [this.goodsReceipt?.docnum, Validators.required],
-                  idsupplier: [this.goodsReceipt?.idsupplier, Validators.required],
-                  suppliername: [this.goodsReceipt?.supplierName],
-                  iduser: [this.goodsReceipt?.iduser, Validators.required],
-                  username: [this.goodsReceipt?.userName],
-                  date: [this.goodsReceipt?.date, [this.dateValidator, Validators.required]],
-                  time: [
-                    this.goodsReceipt?.time,
-                    [
-                      Validators.required,
-                      Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/),
-                    ],
-                  ],
-                });
-
-                this.goodsReceiptProductForm = this.formBuilder.group({
-                  idgoodsreceipt: [this.goodsReceipt?.id],
-                  idproduct: [null, Validators.required],
-                  quantity: [null, Validators.required],
-                  price: [null, Validators.required],
-                });
-
-                this.isLoaded = true;
-              },
-              error: error => {
-                this.toastr.error(error ? error : 'Operación no autorizada');
-              },
-            });
-          },
-          error: error => {
-            this.toastr.error(error ? error : 'Operación no autorizada');
-          },
+        this.goodsReceiptForm = this.formBuilder.group({
+          id: [this.goodsReceipt?.id],
+          docnum: [this.goodsReceipt?.docnum, Validators.required],
+          idsupplier: [this.goodsReceipt?.idsupplier, Validators.required],
+          suppliername: [this.goodsReceipt?.supplierName],
+          iduser: [this.goodsReceipt?.iduser, Validators.required],
+          username: [this.goodsReceipt?.userName],
+          date: [this.goodsReceipt?.date, [this.dateValidator, Validators.required]],
+          time: [
+            this.goodsReceipt?.time,
+            [
+              Validators.required,
+              Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/),
+            ],
+          ],
         });
+
+        this.goodsReceiptProductForm = this.formBuilder.group({
+          idgoodsreceipt: [this.goodsReceipt?.id],
+          idproduct: [null, Validators.required],
+          quantity: [null, Validators.required],
+          price: [null, Validators.required],
+        });
+
+        this.isLoaded = true;
       },
       error: error => {
         this.toastr.error(error ? error : 'Operación no autorizada');
@@ -126,19 +105,6 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
       next: result => {
         let res = JSON.parse(JSON.stringify(result));
         this._goodsReceiptProducts = res;
-        this._goodsReceiptProducts?.forEach(e => {
-          //Get a product data of backend by id
-          this.subs4 = this.productService.getById(e.idproduct).subscribe({
-            next: result => {
-              let res = JSON.parse(JSON.stringify(result));
-              e.nameproduct = res.name;
-              this._products = this._products?.filter(el => el.id !== e.idproduct);
-            },
-            error: error => {
-              this.toastr.error(error ? error : 'Operación no autorizada');
-            },
-          });
-        });
       },
       error: error => {
         this.toastr.error(error ? error : 'Operación no autorizada');

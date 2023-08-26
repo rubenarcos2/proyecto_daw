@@ -4,13 +4,20 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Subscription, first } from 'rxjs';
 import { Supplier } from 'src/app/models/supplier';
 import { SupplierService } from 'src/app/services/supplier.service';
+import jsPDF, { CellConfig } from 'jspdf';
+import autoTable, { ColumnInput } from 'jspdf-autotable';
 
-@Component({ templateUrl: 'list.component.html' })
+@Component({
+  templateUrl: './list.component.html',
+  styleUrls: ['./list.component.css'],
+})
 export class SupplierListComponent implements OnInit, OnDestroy {
   private _suppliers?: Supplier[];
   private _links?: any[];
+  protected isPrintingPDF = false;
   private subs: Subscription = new Subscription();
   private subs2: Subscription = new Subscription();
+  private subs3: Subscription = new Subscription();
 
   constructor(
     private supplierService: SupplierService,
@@ -91,6 +98,107 @@ export class SupplierListComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Get all suppliers and send to generate PDF
+   *
+   */
+  suppliersToPDF() {
+    this.isPrintingPDF = true;
+
+    //Get all suppliers of backend
+    this.subs3 = this.supplierService.getAllNoPaginated().subscribe({
+      next: result => {
+        let suppliers = JSON.parse(JSON.stringify(result));
+        suppliers.sort((a: { id: number }, b: { id: number }) => a.id - b.id);
+        suppliers.forEach((sup: { id: string; created_at: any; updated_at: any; image: any }) => {
+          sup.id = String(sup.id);
+          delete sup.created_at;
+          delete sup.updated_at;
+          delete sup.image;
+        });
+        console.log(suppliers);
+        this.generatePDF(suppliers);
+        this.isPrintingPDF = false;
+      },
+      error: error => {
+        this.toastr.error(error ? error : 'No se puede conectar con el servidor');
+      },
+    });
+  }
+
+  /**
+   * Generate PDF document with jspdf library
+   *
+   */
+  generatePDF(suppliers: any) {
+    let doc = new jsPDF({ putOnlyUsedFonts: true, orientation: 'landscape' });
+
+    let pages = doc.getNumberOfPages();
+    let pageWidth = doc.internal.pageSize.width; //Optional
+    let pageHeight = doc.internal.pageSize.height; //Optional
+
+    let columns: ColumnInput[] = [
+      {
+        title: 'Código',
+        key: 'id',
+      },
+      {
+        title: 'CIF/NIF',
+        key: 'cif_nif',
+      },
+      {
+        title: 'Nombre',
+        key: 'name',
+      },
+      {
+        title: 'Dirección',
+        key: 'address',
+      },
+      {
+        title: 'Ciudad',
+        key: 'city',
+      },
+      {
+        title: 'Teléf.',
+        key: 'phone',
+      },
+      {
+        title: 'Email',
+        key: 'email',
+      },
+      {
+        title: 'Pág. web',
+        key: 'web',
+      },
+      {
+        title: 'Comentarios',
+        key: 'notes',
+      },
+    ];
+    autoTable(doc, {
+      columns: columns,
+      body: suppliers,
+      margin: { top: 25 },
+      headStyles: { fillColor: [253, 199, 60], textColor: 'black' },
+    });
+
+    pages = doc.getNumberOfPages();
+
+    //Footer with page number
+    for (let j = 1; j < pages + 1; j++) {
+      let horizontalPos = pageWidth / 2; //Can be fixed number
+      let verticalPos = pageHeight - 5; //Can be fixed number
+      doc.setFontSize(10);
+      doc.text('Informe de todos los proveedores', pageWidth / 2, 15, { align: 'center' });
+      doc.addImage('../../assets/img/icons/gesmerca.png', 'PNG', 275, 5, 15, 15);
+
+      doc.setPage(j);
+      doc.text(`${j} de ${pages}`, horizontalPos, verticalPos, { align: 'center' });
+    }
+
+    doc.save('listado_proveedores.pdf');
+  }
+
+  /**
    * This function start on destroy event page
    *
    * Unsuscribe all observable suscriptions
@@ -99,6 +207,7 @@ export class SupplierListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subs.unsubscribe();
     this.subs2.unsubscribe();
+    this.subs3.unsubscribe();
   }
 
   get suppliers() {

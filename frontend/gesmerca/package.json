@@ -19,6 +19,8 @@
     "@angular/platform-browser-dynamic": "^14.3.0",
     "@angular/router": "^14.3.0",
     "bootstrap": "^5.2.3",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.6.0",
     "ngx-toastr": "^15.2.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.5.0",

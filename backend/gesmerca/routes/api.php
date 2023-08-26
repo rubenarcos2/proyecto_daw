@@ -104,6 +104,7 @@ Route::group([
     'prefix' => 'goodsreceipt'
 ], function ($router) {
     Route::get('/', [GoodsReceiptController::class, 'index']);
+    Route::get('/all', [GoodsReceiptController::class, 'all']);
     Route::get('/{id}', [GoodsReceiptController::class, 'show'])->where('id', '[0-9]+');
     Route::get('/{id}/products', [GoodsReceiptController::class, 'products'])->where('id', '[0-9]+');
     Route::post('/getPriceEst', [GoodsReceiptController::class, 'getPriceEst']);

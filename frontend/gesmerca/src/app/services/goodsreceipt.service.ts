@@ -21,6 +21,14 @@ export class GoodsreceiptService {
     );
   }
 
+  getAllNoPaginated(param?: any): Observable<GoodsReceipt[]> {
+    return this.http.get<GoodsReceipt[]>(`${this.baseUrl}/goodsreceipt/all`).pipe(
+      map(result => {
+        return result;
+      })
+    );
+  }
+
   getById(id: any): Observable<GoodsReceipt> {
     return this.http.get<GoodsReceipt>(`${this.baseUrl}/goodsreceipt/${id}`);
   }
