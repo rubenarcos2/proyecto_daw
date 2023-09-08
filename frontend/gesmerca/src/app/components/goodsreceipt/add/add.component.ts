@@ -1,6 +1,6 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { Supplier } from 'src/app/models/supplier';
@@ -48,7 +48,6 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
     private productService: ProductService,
     protected authService: AuthService,
     private toastr: ToastrService,
-    private route: ActivatedRoute,
     private router: Router,
     private datePipe: DatePipe
   ) {}
@@ -62,7 +61,8 @@ export class GoodsReceiptAddComponent implements OnInit, OnDestroy {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.router.onSameUrlNavigation = 'reload';
 
-    this._user = JSON.parse(JSON.stringify(this.authService.getAuthUser())).user;
+    if (this.authService.getAuthUser() != null)
+      this._user = JSON.parse(JSON.stringify(this.authService.getAuthUser())).user;
 
     this.goodsReceiptForm = this.formBuilder.group({
       id: [null],

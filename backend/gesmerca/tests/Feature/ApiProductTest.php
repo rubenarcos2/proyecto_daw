@@ -18,14 +18,6 @@ class ApiProductTest extends TestCase
     }
 
     /**
-     * A test of api return a product
-     */
-    public function test_returns_a_product(): void
-    {
-        $this->get('/api/product/1')->assertStatus(200);
-    }
-
-    /**
      * A administrator login test.
      */
     public function test_login_admin()
@@ -38,6 +30,21 @@ class ApiProductTest extends TestCase
         ];
  
         return $this->withHeaders(['Accept' => 'application/json'])->post('api/auth/login', $payload)->assertStatus(200);
+    }
+
+    /**
+     * A test of api return a product
+     * 
+     * This test receives the json response from login and '@depends' is the directive that links them.
+     * @depends test_login_admin
+     */
+    public function test_returns_a_product($jsonResponse): void
+    {
+        $content = $jsonResponse->getContent();
+        $array = json_decode($content, true);
+        $token = $array['access_token'];
+
+        $this->withHeaders(['Authorization'=>'Bearer '.$token,'Accept' => 'application/json'])->get('/api/product/1')->assertStatus(200);
     }
 
     /**
@@ -56,6 +63,7 @@ class ApiProductTest extends TestCase
         $payload = [
             "name" => 'Test product',
             "description" => 'A test product description',
+            "supplier" => 4,
             "image" => null,
             "price" => 9.99,
             "stock" => 99
@@ -65,7 +73,7 @@ class ApiProductTest extends TestCase
     }
 
     /**
-     * A test of api delete test product
+     * A test of api update test product
      * 
      * This test receives the json response from login and '@depends' is the directive that links them.
      * @depends test_login_admin
@@ -104,7 +112,7 @@ class ApiProductTest extends TestCase
         $array = json_decode($content, true);
         $token = $array['access_token'];
 
-        $prod = Product::where('name', 'Test product 2')->get()->first();
+        $prod = Product::where('name', 'Test product')->get()->first();
 
         $payload = [
             "id" => $prod->id

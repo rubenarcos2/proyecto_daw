@@ -7,11 +7,9 @@ import { Subscription } from 'rxjs';
 import { GoodsReceipt } from 'src/app/models/goodsreceipt';
 import { GoodsReceiptProduct } from 'src/app/models/goodsreceiptproduct';
 import { Product } from 'src/app/models/product';
-import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { GoodsreceiptService } from 'src/app/services/goodsreceipt.service';
 import { ProductService } from 'src/app/services/product.service';
-import { SupplierService } from 'src/app/services/supplier.service';
 
 @Component({
   selector: 'app-edit',
@@ -42,7 +40,6 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private goodsReceiptService: GoodsreceiptService,
-    private supplierService: SupplierService,
     private productService: ProductService,
     protected authService: AuthService,
     private toastr: ToastrService,

@@ -3,11 +3,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
-import { SupplierEditComponent } from './edit.component';
+import { GoodsReceiptEditComponent } from './edit.component';
+import { AuthService } from 'src/app/services/auth.service';
+import { GoodsreceiptService } from 'src/app/services/goodsreceipt.service';
+import { ProductService } from 'src/app/services/product.service';
+import { DatePipe } from '@angular/common';
 
-describe('ProductEditComponent', () => {
-  let component: SupplierEditComponent;
-  let fixture: ComponentFixture<SupplierEditComponent>;
+describe('GoodsReceiptEditComponent', () => {
+  let component: GoodsReceiptEditComponent;
+  let fixture: ComponentFixture<GoodsReceiptEditComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -19,11 +23,18 @@ describe('ProductEditComponent', () => {
           positionClass: 'toast-top-right',
         }),
       ],
-      declarations: [SupplierEditComponent],
-      providers: [HttpClient, HttpHandler],
+      declarations: [GoodsReceiptEditComponent],
+      providers: [
+        HttpClient,
+        HttpHandler,
+        GoodsreceiptService,
+        ProductService,
+        AuthService,
+        DatePipe,
+      ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SupplierEditComponent);
+    fixture = TestBed.createComponent(GoodsReceiptEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

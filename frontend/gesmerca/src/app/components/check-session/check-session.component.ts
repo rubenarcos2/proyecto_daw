@@ -10,7 +10,7 @@ import { CheckSessionService } from 'src/app/services/check-session.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class CheckSessionComponent implements OnInit, OnDestroy {
-  @Input() id?: string;
+  @Input() id?: string = 'CheckSession';
   isOpen = false;
   private element: any;
   protected mp4url: any;
