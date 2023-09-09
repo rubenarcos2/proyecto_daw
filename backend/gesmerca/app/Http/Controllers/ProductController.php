@@ -61,6 +61,22 @@ class ProductController extends Controller
     {
         try{
             $products = Product::all();
+            foreach ($products as $prod) {
+                $image_name = substr($prod->image, strlen(URL::to('').'/storage/assets/img/products/'));
+                $thumbail_path = URL::to('') . '/storage/assets/img/products/' . substr($image_name,0,strpos($image_name, '.'));
+                $file_path = public_path() . '/storage/assets/img/products/' . substr($image_name,0,strpos($image_name, '.'));
+                $file_path_ext = substr($image_name,strpos($image_name, '.'));
+
+                if(str_contains($image_name, 'no-image')){
+                    if(file_exists($file_path.'_32x32.png'))
+                        $prod->thumbail_32x32 = $thumbail_path.'_32x32.png';
+                    if(file_exists($file_path.'_128x128.png'))
+                        $prod->thumbail_128x128 = $thumbail_path.'_128x128.png';
+                }else{
+                    file_exists($file_path.'_32x32'.$file_path_ext) ? $prod->thumbail_32x32 = $thumbail_path.'_32x32'.$file_path_ext : $prod->thumbail_32x32 = URL::to('') . '/storage/assets/img/products/no-image_32x32.png';
+                    file_exists($file_path.'_128x128'.$file_path_ext) ? $prod->thumbail_128x128 = $thumbail_path.'_128x128'.$file_path_ext : $prod->thumbail_128x128 = URL::to('') . '/storage/assets/img/products/no-image_128x128.png'; 
+                }
+            }
             return response()->json($products);
         }catch(\Exception $e){
             return response()->json(['error' => $e->getMessage()]);

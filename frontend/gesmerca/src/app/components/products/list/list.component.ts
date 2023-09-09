@@ -16,6 +16,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   private _products?: Product[];
   private _links?: any[];
   protected isPrintingPDF = false;
+  protected isSearching = false;
   private subs: Subscription = new Subscription();
   private subs2: Subscription = new Subscription();
   private subs3: Subscription = new Subscription();
@@ -206,6 +207,68 @@ export class ProductListComponent implements OnInit, OnDestroy {
     }
 
     doc.save('listado_productos.pdf');
+  }
+
+  /**
+   * Get a text and search on server
+   *
+   */
+  search(text: string, event: Event) {
+    this.isSearching = true;
+    let btn = event.target as HTMLButtonElement;
+    if (btn.textContent != 'Quitar filtro') {
+      if (text != '') {
+        //Get all products of backend
+        this.subs = this.productService.getAllNoPaginated().subscribe({
+          next: result => {
+            let res = JSON.parse(JSON.stringify(result)) as Product[];
+            this._products = res.filter(
+              e =>
+                e.name?.includes(text) ||
+                e.description == new Text(text) ||
+                e.price == Number(text.replace(',', '.')) ||
+                e.stock == Number(text)
+            );
+            this._links = undefined;
+            document
+              .getElementById('search-report')
+              ?.getElementsByTagName('button')[0]
+              .setAttribute('class', 'btn-danger');
+            document
+              .getElementById('search-report')!
+              .getElementsByTagName('button')[0].textContent = 'Quitar filtro';
+            this.isSearching = false;
+          },
+          error: error => {
+            this.toastr.error(error ? error : 'No se puede conectar con el servidor');
+          },
+        });
+      }
+    } else {
+      //Get all products of backend
+      this.subs = this.productService
+        .getAll()
+        .pipe(first())
+        .subscribe({
+          next: result => {
+            let res = JSON.parse(JSON.stringify(result));
+            this._links = res.links;
+            this._products = res.data;
+            document
+              .getElementById('search-report')
+              ?.getElementsByTagName('button')[0]
+              .setAttribute('class', '');
+            document
+              .getElementById('search-report')!
+              .getElementsByTagName('button')[0].textContent = 'Buscar';
+            document.getElementById('search-report')!.getElementsByTagName('input')[0].value = '';
+            this.isSearching = false;
+          },
+          error: error => {
+            this.toastr.error(error ? error : 'No se puede conectar con el servidor');
+          },
+        });
+    }
   }
 
   /**

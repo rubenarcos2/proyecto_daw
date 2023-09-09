@@ -1,5 +1,11 @@
-#report-pdf {
-  position: relative;
-  float: right;
-  margin-right: 1rem;
+#search-report {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 4rem;
+  padding-right: 4rem;
+}
+
+#search-report input {
+  margin-right: 0.5rem;
 }

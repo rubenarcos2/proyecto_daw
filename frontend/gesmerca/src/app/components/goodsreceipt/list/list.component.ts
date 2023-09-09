@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription, first } from 'rxjs';
 import { GoodsreceiptService } from 'src/app/services/goodsreceipt.service';
 import { GoodsReceipt } from 'src/app/models/goodsreceipt';
 import { AuthService } from 'src/app/services/auth.service';
-import { DatePipe } from '@angular/common';
+import { DATE_PIPE_DEFAULT_TIMEZONE, DatePipe } from '@angular/common';
 import autoTable, { ColumnInput } from 'jspdf-autotable';
 import jsPDF from 'jspdf';
 
@@ -16,6 +16,7 @@ export class GoodsReceiptListComponent implements OnInit, OnDestroy {
   private _goodsReceipt?: GoodsReceipt[];
   private _links?: any[];
   protected isPrintingPDF = false;
+  protected isSearching = false;
   private subs: Subscription = new Subscription();
   private subs2: Subscription = new Subscription();
   private subs3: Subscription = new Subscription();
@@ -193,6 +194,67 @@ export class GoodsReceiptListComponent implements OnInit, OnDestroy {
     }
 
     doc.save('listado_albaranes_recepcion_mercancia.pdf');
+  }
+
+  /**
+   * Get a text and search on server
+   *
+   */
+  search(text: string, event: Event) {
+    this.isSearching = true;
+    let btn = event.target as HTMLButtonElement;
+    if (btn.textContent != 'Quitar filtro') {
+      if (text != '') {
+        //Get all products of backend
+        this.subs = this.goodsReceiptService.getAllNoPaginated().subscribe({
+          next: result => {
+            let res = JSON.parse(JSON.stringify(result)) as GoodsReceipt[];
+            this._goodsReceipt = res.filter(
+              e =>
+                e.docnum?.includes(text) ||
+                e.supplierName?.includes(text) ||
+                e.userName?.includes(text)
+            );
+            this._links = undefined;
+            document
+              .getElementById('search-report')
+              ?.getElementsByTagName('button')[0]
+              .setAttribute('class', 'btn-danger');
+            document
+              .getElementById('search-report')!
+              .getElementsByTagName('button')[0].textContent = 'Quitar filtro';
+            this.isSearching = false;
+          },
+          error: error => {
+            this.toastr.error(error ? error : 'No se puede conectar con el servidor');
+          },
+        });
+      }
+    } else {
+      //Get all products of backend
+      this.subs = this.goodsReceiptService
+        .getAll()
+        .pipe(first())
+        .subscribe({
+          next: result => {
+            let res = JSON.parse(JSON.stringify(result));
+            this._links = res.links;
+            this._goodsReceipt = res.data;
+            document
+              .getElementById('search-report')
+              ?.getElementsByTagName('button')[0]
+              .setAttribute('class', '');
+            document
+              .getElementById('search-report')!
+              .getElementsByTagName('button')[0].textContent = 'Buscar';
+            document.getElementById('search-report')!.getElementsByTagName('input')[0].value = '';
+            this.isSearching = false;
+          },
+          error: error => {
+            this.toastr.error(error ? error : 'No se puede conectar con el servidor');
+          },
+        });
+    }
   }
 
   /**
