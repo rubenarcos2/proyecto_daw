@@ -1,2 +1,3 @@
-!.docker/*
-!.recursos_varios/*
+docker
+recursos_varios
+IA/gesmerca_price_estimated.pkl
