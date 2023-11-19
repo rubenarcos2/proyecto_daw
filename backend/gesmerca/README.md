@@ -31,6 +31,12 @@ $ git clone https://github.com/rubenarcos2/proyecto_daw.git
 $ npm install
 ```
 
+4. Configure database credentials.
+
+## Migration database and initialization
+
+Run `php artisan migrate` to create and initialise the database, which will create and populate all parameterisation and example products.
+
 ## Development server
 
 Run `php artisan serve` for a dev server. Navigate to `http://localhost:8000/`. The app will automatically reload if you change any of the source files.
