@@ -45,20 +45,20 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
             'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|confirmed|min:6',
+            'password' => 'required|string|min:6',
+            'password_confirmation' => 'required|same:password'
         ]);
         if($validator->fails()){
-            return response()->json(['error' => $validator->errors()->toJson()], 400);
+            return response()->json(['error' => $validator->errors()->toJson()], 422);
         }
         $user = User::create(array_merge(
                     $validator->validated(),
                     ['password' => bcrypt($request->password)]
                 ));
-        $user->assignRole('user');
-        return response()->json([
-            'message' => 'Usuario registrado correctamente',
-            //'user' => $user
-        ], 201);
+        $user->assignRole('User');
+        $user->syncPermissions(['product-list', 'config-list', 'config-edit']);
+
+        return response()->json(['message' => 'Usuario registrado correctamente']);
     }
 
     /**
