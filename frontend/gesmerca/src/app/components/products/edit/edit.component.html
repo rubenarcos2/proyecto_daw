@@ -21,7 +21,7 @@
             </div>
             <div class="mb-3">
                 <label for="inputDescription" class="form-label">Descripción</label>
-                <textarea (change)="onChangeInput($event)" class="form-control" id="inputDescription"
+                <textarea (input)="onChangeInput($event)" class="form-control" id="inputDescription"
                     formControlName="description"></textarea>
                 <div class="form-text text-danger"
                     *ngIf="productFormControls['description'].invalid && (productFormControls['description'].dirty || productFormControls['description'].touched)">
@@ -85,17 +85,17 @@
                 <div>
                     <label for="inputPriceMin" class="form-label">Precio Mín.</label>
                     <div><input (change)="onChangeInput($event)" type="text" class="form-control" id="inputPriceMin"
-                            formControlName="priceMin" type="number" min="0.01" step="0.01" readonly>€</div>
+                            formControlName="priceMin" type="text" readonly>€</div>
                 </div>
                 <div>
                     <label for="inputPriceMax" class="form-label">Precio Máx.</label>
                     <div><input (change)="onChangeInput($event)" type="text" class="form-control" id="inputPriceMax"
-                            formControlName="priceMax" type="number" min="0.01" step="0.01" readonly>€</div>
+                            formControlName="priceMax" type="text" readonly>€</div>
                 </div>
                 <div>
                     <label for="inputPriceAvg" class="form-label">Precio Medio</label>
-                    <div><input (change)="onChangeInput($event)" type="number" min="0.01" step="0.01"
-                            class="form-control" id="inputPriceAvg" formControlName="priceAvg" readonly>€</div>
+                    <div><input (change)="onChangeInput($event)" type="text" class="form-control" id="inputPriceAvg"
+                            formControlName="priceAvg" readonly>€</div>
                 </div>
                 <div>
                     <label for="inputStock" class="form-label">Stock</label>

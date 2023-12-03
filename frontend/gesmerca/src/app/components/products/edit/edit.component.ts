@@ -67,9 +67,21 @@ export class ProductEditComponent implements OnInit, OnDestroy {
             this.product?.price,
             [Validators.required, Validators.pattern('^[0-9]*[,.][0-9]*$')],
           ],
-          priceMin: [this.product?.priceMin],
-          priceMax: [this.product?.priceMax],
-          priceAvg: [this.product?.priceAvg],
+          priceMin: [
+            this.product?.priceMin == 0
+              ? 'Sin histórico'
+              : this.product?.priceMin?.toString().replace('.', ','),
+          ],
+          priceMax: [
+            this.product?.priceMax == 0
+              ? 'Sin histórico'
+              : this.product?.priceMax?.toString().replace('.', ','),
+          ],
+          priceAvg: [
+            this.product?.priceAvg == 0
+              ? 'Sin histórico'
+              : this.product?.priceAvg?.toString().replace('.', ','),
+          ],
           stock: [this.product?.stock, [Validators.required, Validators.pattern('^[0-9]*$')]],
         });
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
@@ -92,7 +104,10 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     this.dataForm.append('name', this.productForm.get('name')?.value);
     this.dataForm.append('description', this.productForm.get('description')?.value);
     this.dataForm.append('supplier', this.productForm.get('supplier')?.value);
-    this.dataForm.append('price', this.productForm.get('price')?.value.replace(/,/g, '.'));
+    this.dataForm.append(
+      'price',
+      this.productForm.get('price')?.value.toString().replace(/,/g, '.')
+    );
     if (this.dataForm.get('image') !== null)
       this.dataForm.append('image', this.productForm.get('image')?.value);
     this.dataForm.append('stock', this.productForm.get('stock')?.value);

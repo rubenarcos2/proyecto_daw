@@ -86,18 +86,19 @@ class ProductController extends Controller
     public function show($id){
         try{
             $product = Product::find($id);
-
-            $product->priceMin = $this->getPriceMin($id);
-            $product->priceMax = $this->getPriceMax($id);
-            $product->priceAvg = $this->getPriceAvg($id);
-            if (empty($product))
+            $product->price = floatval($product->price);
+            //dd($product);
+            if ($product == null)
                 return response()->json(['error' => 'No existe un producto para el id dado']);
-            else
+            else{
+                $product->priceMin = $this->getPriceMin($id);
+                $product->priceMax = $this->getPriceMax($id);
+                $product->priceAvg = $this->getPriceAvg($id);
                 return response()->json($product);
+            }
         }catch(\Exception $e){
             return response()->json(['error' => $e->getMessage()]);
         }
-        
     }
 
     public function store(Request $request){
@@ -279,15 +280,26 @@ class ProductController extends Controller
     }
 
     private function getPriceMin($idproduct){
-        return GoodsReceiptProduct::where('idproduct', $idproduct)->select('price')->orderBy('price', 'asc')->first()->price;        
+        $grp = GoodsReceiptProduct::where('idproduct', $idproduct)->select('price')->orderBy('price', 'asc')->first();
+        if(empty($grp))
+            return 0;
+        else
+            return $grp->price;
     }
     
     private function getPriceMax($idproduct){
-        return GoodsReceiptProduct::where('idproduct', $idproduct)->select('price')->orderBy('price', 'desc')->first()->price;        
+        $grp = GoodsReceiptProduct::where('idproduct', $idproduct)->select('price')->orderBy('price', 'desc')->first();
+        if(empty($grp))
+            return 0;
+        else
+            return $grp->price;
     }
     
     private function getPriceAvg($idproduct){
-        $grp = GoodsReceiptProduct::where('idproduct', $idproduct);        
-        return round($grp->avg('price'),2);
+        $grp = GoodsReceiptProduct::where('idproduct', $idproduct);
+        if(empty($grp))
+            return 0;
+        else
+            return round($grp->avg('price'),2);
     }
 }

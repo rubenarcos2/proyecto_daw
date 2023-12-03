@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('supplier');
             $table->foreign('supplier')->references('id')->on('suppliers')->onDelete('cascade');
             $table->text('image');
-            $table->double('price');
+            $table->float('price');
             $table->integer('stock');
             $table->timestamps();
         });
