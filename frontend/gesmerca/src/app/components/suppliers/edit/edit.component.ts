@@ -190,7 +190,7 @@ export class SupplierEditComponent implements OnInit, OnDestroy {
   /**
    * Get a group of goods receipt of paginate selected
    */
-  onChangePagination(event: any): void {
+  onChangePaginationProducts(event: any): void {
     event.preventDefault();
 
     //Get all products paginated
@@ -202,6 +202,28 @@ export class SupplierEditComponent implements OnInit, OnDestroy {
           let res = JSON.parse(JSON.stringify(result));
           this._linksProducts = res.links;
           this._products = res.data;
+        },
+        error: error => {
+          this.toastr.error(error ? error : 'No se puede conectar con el servidor');
+        },
+      });
+  }
+
+  /**
+   * Get a group of goods receipt of paginate selected
+   */
+  onChangePaginationGoodsReceipts(event: any): void {
+    event.preventDefault();
+
+    //Get all products paginated
+    this.subs3 = this.goodsreceiptService
+      .getAllBySupplier(this.supplier?.id, event.target.href.split('?')[1])
+      .pipe(first())
+      .subscribe({
+        next: result => {
+          let res = JSON.parse(JSON.stringify(result));
+          this._linksGoodReceipts = res.links;
+          this._goodsReceipts = res.data;
         },
         error: error => {
           this.toastr.error(error ? error : 'No se puede conectar con el servidor');
