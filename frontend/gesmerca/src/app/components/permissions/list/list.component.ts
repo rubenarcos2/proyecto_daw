@@ -16,6 +16,7 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
   private _permissions!: Permission[];
   private subs: Subscription = new Subscription();
   private subs2: Subscription = new Subscription();
+  private subs3: Subscription = new Subscription();
 
   constructor(
     protected authService: AuthService,
@@ -45,7 +46,7 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
         });
         this._users.forEach(u => {
           //Get user's permission of backend
-          this.permissionService.getPermissionsUser(u.id).subscribe({
+          this.subs2 = this.permissionService.getPermissionsUser(u.id).subscribe({
             next: result => {
               let permissions = JSON.parse(JSON.stringify(result));
               u.permissions = permissions;
@@ -118,10 +119,10 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
       });
       let param = new FormData();
       param.append('permissions', JSON.stringify(permListChecked));
-      this.subs2 = this.permissionService.setPermissionsUser(param, userId).subscribe({
+      this.subs3 = this.permissionService.setPermissionsUser(param, userId).subscribe({
         next: result => {
           let res = JSON.parse(JSON.stringify(result));
-          res.error ? this.toastr.error(res.error) : this.toastr.success(res.message);
+          this.toastr.success(res.message);
         },
         error: error => {
           this.toastr.error(error ? error : 'No se puede conectar con el servidor');
@@ -139,6 +140,7 @@ export class PermissionsListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subs.unsubscribe();
     this.subs2.unsubscribe();
+    this.subs3.unsubscribe();
   }
 
   get users(): User[] {

@@ -14,22 +14,23 @@ export class ProductService {
   constructor(private http: HttpClient) {}
 
   getAll(param?: any) {
-    if (param)
-      return this.http.get<Product[]>(`${this.baseUrl}/product?${param}`).pipe(
-        map(result => {
-          return result;
-        })
-      );
-    else
-      return this.http.get<Product[]>(`${this.baseUrl}/product`).pipe(
-        map(result => {
-          return result;
-        })
-      );
+    return this.http.get<Product[]>(`${this.baseUrl}/product?${param}`).pipe(
+      map(result => {
+        return result;
+      })
+    );
   }
 
   getAllNoPaginated(param?: any): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.baseUrl}/product/all`).pipe(
+      map(result => {
+        return result;
+      })
+    );
+  }
+
+  getAllBySupplier(id: any, param?: any) {
+    return this.http.get<Product[]>(`${this.baseUrl}/product/allbysupplier/${id}?${param}`).pipe(
       map(result => {
         return result;
       })

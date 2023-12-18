@@ -31,7 +31,7 @@ class SupplierController extends Controller
             $suppliers = Supplier::orderBy('updated_at', 'desc')->paginate(8);
             return response()->json($suppliers);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -44,7 +44,7 @@ class SupplierController extends Controller
             $suppliers = Supplier::all();
             return response()->json($suppliers);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -57,7 +57,7 @@ class SupplierController extends Controller
             $supplier = Supplier::find($id);
             return response()->json($supplier);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -81,21 +81,23 @@ class SupplierController extends Controller
                 'web' => 'nullable',
                 'notes' => 'nullable',
             ]);
-        
-            $supplier = Supplier::create([
-                'cif_nif' => $request->cif_nif,
-                'name' => $request->name,
-                'address' => $request->address,
-                'city' => $request->city,
-                'phone' => $request->phone,
-                'email' => $request->email,
-                'web' => $request->web,
-                'notes' => $request->notes,
-            ]);
-
-            return response()->json(['message' => 'Se ha creado el proveedor correctamente']);
+            $docnum = Supplier::where('cif_nif', $request->cif_nif)->first();
+            if(is_null($docnum)) {
+                $supplier = Supplier::create([
+                    'cif_nif' => $request->cif_nif,
+                    'name' => $request->name,
+                    'address' => $request->address,
+                    'city' => $request->city,
+                    'phone' => $request->phone,
+                    'email' => $request->email,
+                    'web' => $request->web,
+                    'notes' => $request->notes,
+                ]);
+                return response()->json(['message' => 'Se ha creado el proveedor']);
+            }else
+                return response()->json(['error' => 'No se ha creado el proveedor: ya existe un proveedor con el CIF/NIF dado'], 400);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -119,21 +121,23 @@ class SupplierController extends Controller
                 'web' => 'nullable',
                 'notes' => 'nullable',
             ]);
-        
-            $supplier = Supplier::find($id);
-            $supplier->cif_nif = $request->cif_nif;
-            $supplier->name = $request->name;
-            $supplier->address = $request->address;
-            $supplier->city = $request->city;
-            $supplier->phone = $request->phone;
-            $supplier->email = $request->email;
-            $supplier->web = $request->web;
-            $supplier->notes = $request->notes;
-            $supplier->save();
-            
-            return response()->json(['message' => 'Se ha actualizado el proveedor correctamente']);
+            $docnum = Supplier::where('cif_nif', $request->cif_nif)->where('id','!=', $id)->first();
+            if(is_null($docnum)) {
+                $supplier = Supplier::find($id);
+                $supplier->cif_nif = $request->cif_nif;
+                $supplier->name = $request->name;
+                $supplier->address = $request->address;
+                $supplier->city = $request->city;
+                $supplier->phone = $request->phone;
+                $supplier->email = $request->email;
+                $supplier->web = $request->web;
+                $supplier->notes = $request->notes;
+                $supplier->save();
+                return response()->json(['message' => 'Se ha actualizado el proveedor']);
+            }else
+                return response()->json(['error' => 'No se ha modificado el proveedor: ya existe un proveedor con el CIF/NIF dado'], 400);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -150,9 +154,9 @@ class SupplierController extends Controller
             $supplier = Supplier::find($id);
             $supplier->delete();
             
-            return response()->json(['message' => 'Se ha eliminado el proveedor correctamente']);
+            return response()->json(['message' => 'Se ha eliminado el proveedor']);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }

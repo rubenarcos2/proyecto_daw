@@ -4,6 +4,8 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Auth\AuthenticationException;
+use Response;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -45,7 +47,13 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+        
+        //Send 440 expired session response returned from api. Token has expired
+        $this->renderable(function(AuthenticationException $e){
+            return Response::json(['error'=> 'Se ha expirado la sesión',$e->getMessage()], 440);
+        });
 
+        //Uncontroled exception
         $this->renderable(function (Throwable $e) {
             return response(['error' => $e->getMessage()], $e->getCode() ?: 400);
         });

@@ -23,17 +23,21 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function login(Request $request){
-    	$validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()->toJson()], 422);
+        try{
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email',
+                'password' => 'required|string|min:6',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()->toJson()], 422);
+            }
+            if (! $token = auth()->attempt($validator->validated())) {
+                return response()->json(['error' => 'Usuario/Contraseña incorrectos'], 401);
+            }
+            return $this->createNewToken($token);
+        }catch(\Exception $e){
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-        if (! $token = auth()->attempt($validator->validated())) {
-            return response()->json(['error' => 'Usuario/Contraseña incorrectos'], 401);
-        }
-        return $this->createNewToken($token);
     }
 
     /**
@@ -42,23 +46,27 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function register(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|min:6',
-            'password_confirmation' => 'required|same:password'
-        ]);
-        if($validator->fails()){
-            return response()->json(['error' => $validator->errors()->toJson()], 422);
-        }
-        $user = User::create(array_merge(
-                    $validator->validated(),
-                    ['password' => bcrypt($request->password)]
-                ));
-        $user->assignRole('User');
-        $user->syncPermissions(['product-list', 'config-list', 'config-edit']);
+        try{
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|between:2,100',
+                'email' => 'required|string|email|max:100|unique:users',
+                'password' => 'required|string|min:6',
+                'password_confirmation' => 'required|same:password'
+            ]);
+            if($validator->fails()){
+                return response()->json(['error' => $validator->errors()->toJson()], 422);
+            }
+            $user = User::create(array_merge(
+                        $validator->validated(),
+                        ['password' => bcrypt($request->password)]
+                    ));
+            $user->assignRole('User');
+            $user->syncPermissions(['product-list', 'config-list', 'config-edit']);
 
-        return response()->json(['message' => 'Usuario registrado correctamente']);
+            return response()->json(['message' => 'Usuario registrado']);
+        }catch(\Exception $e){
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -67,8 +75,12 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function logout() {
-        auth()->logout();
-        return response()->json(['message' => 'Se ha cerrado la sesión correctamente']);
+        try{
+            auth()->logout();
+            return response()->json(['message' => 'Se ha cerrado la sesión']);
+        }catch(\Exception $e){
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -77,7 +89,11 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function refresh() {
-        return $this->createNewToken(auth()->refresh());
+        try{
+            return $this->createNewToken(auth()->refresh(true, true));
+        }catch(\Exception $e){
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -86,11 +102,15 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function userProfile() {
-        return response()->json([
-            'user' => auth()->user(),
-            'roles' => auth()->user()->getRoleNames(),
-            'permissions' => auth()->user()->getAllPermissions()
-        ]);
+        try{
+            return response()->json([
+                'user' => auth()->user(),
+                'roles' => auth()->user()->getRoleNames(),
+                'permissions' => auth()->user()->getAllPermissions()
+            ]);
+        }catch(\Exception $e){
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
     
     /**
@@ -101,12 +121,16 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     protected function createNewToken($token){
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
-        ]);
+        try{
+            return response()->json([
+                        'access_token' => $token,
+                        'token_type' => 'bearer',
+                        'expires_in' => auth()->factory()->getTTL() * 60,
+                        'user' => auth()->user()
+                    ]);
+        }catch(\Exception $e){
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -120,7 +144,7 @@ class AuthController extends Controller
             $users = User::all();
             return response()->json($users);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }

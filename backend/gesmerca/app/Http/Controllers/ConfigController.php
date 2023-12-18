@@ -30,7 +30,7 @@ class ConfigController extends Controller
             $configs = Config::all();
             return response()->json($configs);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -43,7 +43,7 @@ class ConfigController extends Controller
             $configs = Config::find($id);
             return response()->json($configs);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -57,7 +57,7 @@ class ConfigController extends Controller
             $configs = $user->configs;
             return response()->json($configs);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -71,7 +71,7 @@ class ConfigController extends Controller
             $users = $conf->users;
             return response()->json($users);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -93,13 +93,11 @@ class ConfigController extends Controller
                 $user->configs()->detach($conf->id);
                 $user->configs()->attach($conf->id, ['value' => $request->value, 'description' => $request->description]);
             
-                return response()->json(['message' => 'Se ha actualizado la configuración del usuario correctamente']);
+                return response()->json(['message' => 'Se ha actualizado la configuración del usuario']);
             }else
-                throw new \Exception("ID del usuario o nombre de la configuración inválidos");
-                
-            
+                return response()->json(['error' => 'ID del usuario o nombre de la configuración inválidos'], 400);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -117,13 +115,11 @@ class ConfigController extends Controller
             $conf = Config::where('name', $request->name)->firstOrFail();
             if($user !== null && $conf !== null){
                 $user->configs()->detach($conf->id);            
-                return response()->json(['message' => 'Se ha eliminado la configuración del usuario correctamente']);
+                return response()->json(['message' => 'Se ha eliminado la configuración del usuario']);
             }else
-                throw new \Exception("ID del usuario o nombre de la configuración inválidos");
-                
-            
+                return response()->json(['error' => 'ID del usuario o nombre de la configuración inválidos'], 400);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -148,9 +144,9 @@ class ConfigController extends Controller
             //$conf->configs()->detach();
             $conf->save();            
 
-            return response()->json(['message' => 'Se ha modificado la configuración correctamente']);
+            return response()->json(['message' => 'Se ha modificado la configuración']);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }

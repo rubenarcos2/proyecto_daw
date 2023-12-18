@@ -30,7 +30,7 @@ class RoleController extends Controller
             $roles = Role::all();
             return response()->json($roles);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -43,7 +43,7 @@ class RoleController extends Controller
             $role = Role::find($id);
             return response()->json($role);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -57,7 +57,7 @@ class RoleController extends Controller
             $role = $user->roles->first()->id;
             return response()->json($role);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -78,9 +78,9 @@ class RoleController extends Controller
             $role = Role::create(['name' => $request->name]);
             //All role save by api guard name, I have only one api start endpoint
             
-            return response()->json(['message' => 'Se ha creado el rol correctamente']);
+            return response()->json(['message' => 'Se ha creado el rol']);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -102,9 +102,9 @@ class RoleController extends Controller
             $role->name = $request->name;
             $role->save();
             
-            return response()->json(['message' => 'Se ha actualizado el rol correctamente']);
+            return response()->json(['message' => 'Se ha actualizado el rol']);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -121,9 +121,9 @@ class RoleController extends Controller
             $role = Role::find($id);
             $role->delete();
             
-            return response()->json(['message' => 'Se ha eliminado el rol correctamente']);
+            return response()->json(['message' => 'Se ha eliminado el rol']);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -145,9 +145,9 @@ class RoleController extends Controller
             $user->roles()->detach();
             $user->assignRole([$role->id]);
             
-            return response()->json(['message' => 'Se ha asignado el rol correctamente al usuario']);
+            return response()->json(['message' => 'Se ha asignado el rol al usuario']);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }

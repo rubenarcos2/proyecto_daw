@@ -32,9 +32,20 @@ class CreateConfig extends Seeder
         ]);
 
         foreach (User::all() as $user) {
-            $user->configs()->attach($config1->id, ['value' => 'true', 'description' => 'Descripción']);
-            if($user->name !== "Administrador")
-                $user->configs()->attach($config2->id, ['value' => 'true', 'description' => 'Descripción']);
+            switch ($user->name) {
+                case "Administrador":
+                    $user->configs()->attach($config1->id, ['value' => 'false', 'description' => 'Alto contraste']);
+                    $user->configs()->attach($config2->id, ['value' => 'false', 'description' => 'Texto a voz']);
+                    break;
+                case "Empleado":
+                    $user->configs()->attach($config1->id, ['value' => 'true', 'description' => 'Alto contraste']);
+                    $user->configs()->attach($config2->id, ['value' => 'false', 'description' => 'Texto a voz']);
+                    break;
+                case "Usuario":
+                    $user->configs()->attach($config1->id, ['value' => 'true', 'description' => 'Alto contraste']);
+                    $user->configs()->attach($config2->id, ['value' => 'true', 'description' => 'Texto a voz']);
+                    break;
+            }
         }   
     }
 }

@@ -41,6 +41,7 @@ Route::group([
     Route::get('/', [ProductController::class, 'index']);
     Route::get('/{id}', [ProductController::class, 'show'])->where('id', '[0-9]+');
     Route::get('/all', [ProductController::class, 'all']);
+    Route::get('/allbysupplier/{idSupplier}', [ProductController::class, 'allBySupplier'])->where('idSupplier', '[0-9]+');
     Route::post('/create', [ProductController::class, 'store']);
     Route::post('/delete', [ProductController::class, 'destroy']);
     Route::post('/update', [ProductController::class, 'update']);    
@@ -105,6 +106,7 @@ Route::group([
 ], function ($router) {
     Route::get('/', [GoodsReceiptController::class, 'index']);
     Route::get('/all', [GoodsReceiptController::class, 'all']);
+    Route::get('/allbysupplier/{idSupplier}', [GoodsReceiptController::class, 'allBySupplier'])->where('idSupplier', '[0-9]+');
     Route::get('/{id}', [GoodsReceiptController::class, 'show'])->where('id', '[0-9]+');
     Route::get('/{id}/products', [GoodsReceiptController::class, 'products'])->where('id', '[0-9]+');
     Route::post('/getPriceEst', [GoodsReceiptController::class, 'getPriceEst']);

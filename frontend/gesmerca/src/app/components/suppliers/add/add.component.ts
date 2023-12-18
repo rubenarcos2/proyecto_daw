@@ -14,7 +14,7 @@ export class SupplierAddComponent implements OnInit, OnDestroy {
   protected supplierForm!: FormGroup;
   dataForm!: FormData;
   returnUrl!: string;
-  isSubmitted: boolean = false;
+  isFormUpdating: boolean = false;
   private subs: Subscription = new Subscription();
 
   constructor(
@@ -40,7 +40,6 @@ export class SupplierAddComponent implements OnInit, OnDestroy {
       web: [''],
       notes: [''],
     });
-    this.isSubmitted = true;
   }
 
   /**
@@ -50,7 +49,6 @@ export class SupplierAddComponent implements OnInit, OnDestroy {
    *
    */
   onSubmit() {
-    this.isSubmitted = true;
     this.dataForm.append('id', this.supplierForm.get('id')?.value);
     this.dataForm.append('cif_nif', this.supplierForm.get('cif_nif')?.value);
     this.dataForm.append('name', this.supplierForm.get('name')?.value);
@@ -65,17 +63,51 @@ export class SupplierAddComponent implements OnInit, OnDestroy {
     this.subs = this.supplierService.create(this.dataForm).subscribe({
       next: result => {
         let res = JSON.parse(JSON.stringify(result));
-        res.error ? this.toastr.error(res.error) : this.toastr.success(res.message);
+        this.isFormUpdating = false;
         this.router.navigate([this.returnUrl || '/proveedores']);
+        this.toastr.success(res.message);
       },
       error: error => {
         this.toastr.error(error ? error : 'No se puede conectar con el servidor');
       },
     });
+  }
 
-    this.subs.add(() => {
-      this.isSubmitted = false;
-    });
+  /**
+   * This function execute on change event input
+   *
+   * Detect if input value is changed and set isFormUpdating value on true change
+   *
+   * @param  {Event} event The event change input
+   */
+  onChangeInput(event: any) {
+    let input = event.target.id;
+    switch (input) {
+      case 'inputCifNif':
+        this.isFormUpdating = event.target.value != '';
+        break;
+      case 'inputName':
+        this.isFormUpdating = event.target.value != '';
+        break;
+      case 'inputAddress':
+        this.isFormUpdating = event.target.value != '';
+        break;
+      case 'inputCity':
+        this.isFormUpdating = event.target.value != '';
+        break;
+      case 'inputPhone':
+        this.isFormUpdating = event.target.value != '';
+        break;
+      case 'inputEmail':
+        this.isFormUpdating = event.target.value != '';
+        break;
+      case 'inputWeb':
+        this.isFormUpdating = event.target.value != '';
+        break;
+      case 'inputNotes':
+        this.isFormUpdating = event.target.value != '';
+        break;
+    }
   }
 
   /**
@@ -87,7 +119,8 @@ export class SupplierAddComponent implements OnInit, OnDestroy {
    */
   @HostListener('window:beforeunload', ['$event'])
   handleClose(e: BeforeUnloadEvent): void {
-    if (this.isSubmitted) e.returnValue = '';
+    //e.preventDefault();
+    if (this.isFormUpdating) e.returnValue = true;
   }
 
   /**

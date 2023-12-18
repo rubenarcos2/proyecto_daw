@@ -34,7 +34,7 @@ class GoodsReceiptController extends Controller
         try{
             App::setLocale('es');
             session()->put('locale', 'es');  
-            $goodReceipts = GoodsReceipt::orderBy('date', 'desc')->paginate(8);
+            $goodReceipts = GoodsReceipt::orderBy('updated_at', 'desc')->paginate(8);
             foreach ($goodReceipts as $goodReceipt) {
                 $supplier = Supplier::find($goodReceipt->idsupplier);
                 $user = User::find($goodReceipt->iduser);
@@ -43,7 +43,7 @@ class GoodsReceiptController extends Controller
             }
             return response()->json($goodReceipts);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -60,7 +60,7 @@ class GoodsReceiptController extends Controller
             $goodReceipt->userName = $user->name;
             return response()->json($goodReceipt);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -77,7 +77,7 @@ class GoodsReceiptController extends Controller
             }
             return response()->json($goodReceipt->products);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -96,7 +96,28 @@ class GoodsReceiptController extends Controller
             }
             return response()->json($goodReceipts);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Display a listing of the resource of goods receipt by supplier.
+     */
+    public function allBySupplier($idSupplier)
+    {
+        try{
+            App::setLocale('es');
+            session()->put('locale', 'es');  
+            $goodReceipts = GoodsReceipt::orderBy('updated_at', 'desc')->where('idsupplier', $idSupplier)->paginate(4);
+            foreach ($goodReceipts as $goodReceipt) {
+                $supplier = Supplier::find($goodReceipt->idsupplier);
+                $user = User::find($goodReceipt->iduser);
+                $goodReceipt->supplierName = $supplier->name;
+                $goodReceipt->userName = $user->name;
+            }
+            return response()->json($goodReceipts);
+        }catch(\Exception $e){
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -133,12 +154,12 @@ class GoodsReceiptController extends Controller
                 $product->stock += $request->quantity;
                 $product->save();
     
-                return response()->json(['message' => 'Se ha añadido el producto al albarán de recepción de mercancía correctamente']);
+                return response()->json(['message' => 'Se ha añadido el producto al albarán de recepción de mercancía']);
             }else
-                return response()->json(['message' => 'El producto no pertenece al mismo proveedor que albarán de recepción de mercancía']);
+                return response()->json(['error' => 'El producto no pertenece al mismo proveedor que el albarán de recepción de mercancía'], 400);
             
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -165,9 +186,9 @@ class GoodsReceiptController extends Controller
             $product->stock -= $request->quantity;
             $product->save();
 
-            return response()->json(['message' => 'Se ha eliminado el producto del albarán de recepción de mercancía correctamente']);
+            return response()->json(['message' => 'Se ha eliminado el producto del albarán de recepción de mercancía']);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -189,17 +210,20 @@ class GoodsReceiptController extends Controller
                 'docnum' => 'required',
             ]);
         
-            $goodReceipt = GoodsReceipt::create([
-                'idsupplier' => $request->idsupplier,
-                'iduser' => $request->iduser,
-                'date' => $request->date,
-                'time' => $request->time,
-                'docnum' => $request->docnum,
-            ]);
-
-            return response()->json(['message' => 'Se ha creado el albarán de recepción de mercancía correctamente', 'id' => $goodReceipt->id]);
+            $docnum = GoodsReceipt::where('idsupplier', $request->idsupplier)->where('docnum', $request->docnum)->first();
+            if(is_null($docnum)) {
+                $goodReceipt = GoodsReceipt::create([
+                    'idsupplier' => $request->idsupplier,
+                    'iduser' => $request->iduser,
+                    'date' => $request->date,
+                    'time' => $request->time,
+                    'docnum' => $request->docnum,
+                ]);
+                return response()->json(['message' => 'Se ha creado el albarán de recepción de mercancía', 'id' => $goodReceipt->id]);
+            }else
+                return response()->json(['error' => 'No se ha creado el albarán: ya existe un albarán con el número de documento dado para este proveedor'], 400);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -220,18 +244,20 @@ class GoodsReceiptController extends Controller
                 'time' => 'required',
                 'docnum' => 'required',
             ]);
-        
-            $goodReceipt = GoodsReceipt::find($id);
-            $goodReceipt->idsupplier = $request->idsupplier;
-            $goodReceipt->iduser = $request->iduser;
-            $goodReceipt->date = $request->date;
-            $goodReceipt->time = $request->time;
-            $goodReceipt->docnum = $request->docnum;
-            $goodReceipt->save();
-            
-            return response()->json(['message' => 'Se ha actualizado el albarán de recepción de mercancía correctamente correctamente']);
+            $docnum = GoodsReceipt::where('idsupplier', $request->idsupplier)->where('docnum', $request->docnum)->where('id', '!=', $id)->first();
+            if(is_null($docnum)) {
+                $goodReceipt = GoodsReceipt::find($id);
+                $goodReceipt->idsupplier = $request->idsupplier;
+                $goodReceipt->iduser = (int) $request->iduser;
+                $goodReceipt->date = $request->date;
+                $goodReceipt->time = $request->time;
+                $goodReceipt->docnum = $request->docnum;
+                $goodReceipt->save();
+                return response()->json(['message' => 'Se ha actualizado el albarán de recepción de mercancía']);
+            }else
+                return response()->json(['error' => 'No se ha modificado el albarán: ya existe un albarán con el número de documento dado para este proveedor'], 400);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -257,9 +283,9 @@ class GoodsReceiptController extends Controller
             }
             $goodReceipt->delete();
             
-            return response()->json(['message' => 'Se ha eliminado el albarán de recepción de mercancía correctamente']);
+            return response()->json(['message' => 'Se ha eliminado el albarán de recepción de mercancía']);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -269,10 +295,17 @@ class GoodsReceiptController extends Controller
      * Only enable on production server!!!
      */
     public function getPriceEst(Request $request){
-        $response = Http::post('https://vps.rarcos.com:10450', [
-            "idproduct" => intval($request->idproduct),
-            "quantity" => intval($request->quantity)
-        ]);
-        return $response;
+        try{
+            if (!windows_os()) {
+                $response = Http::post('https://vps.rarcos.com:10450', [
+                    "idproduct" => intval($request->idproduct),
+                    "quantity" => intval($request->quantity)
+                ]);
+                return $response;
+            }else
+                return 0;
+        }catch(\Exception $e){
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

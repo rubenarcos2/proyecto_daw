@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
@@ -30,7 +31,7 @@ class PermissionController extends Controller
             $permissions = Permission::all();
             return response()->json($permissions);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -43,7 +44,7 @@ class PermissionController extends Controller
             $permission = Permission::find($id);
             return response()->json($permission);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -57,7 +58,7 @@ class PermissionController extends Controller
             $permissions = $user->getAllPermissions();
             return response()->json($permissions);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -75,13 +76,15 @@ class PermissionController extends Controller
                 'permissions' => 'required',
             ]);
             $user = User::find($id);
+            $roleId = $user->roles->first()->id;
+            $role = Role::find($roleId);
             //Revoke & add new permissions
-            //Input example -> {"data":["product-list","config-list","config-edit"]}
-            $user->syncPermissions(json_decode($request->permissions,true));
+            //Input example -> {"permissions":["product-list","config-list","config-edit"]}
+            $role->syncPermissions(json_decode($request->permissions,true));
             
-            return response()->json(['message' => 'Se han asignado los permisos correctamente al usuario']);
+            return response()->json(['message' => 'Se han asignado los permisos al usuario']);
         }catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }

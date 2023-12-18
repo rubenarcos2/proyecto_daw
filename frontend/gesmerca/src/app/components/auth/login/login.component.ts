@@ -14,13 +14,16 @@ import { Subscription } from 'rxjs';
 export class LoginComponent implements OnInit, OnDestroy {
   loginForm!: FormGroup;
   returnUrl!: string;
-  isSubmitted: boolean = false;
+  isFormUpdating: boolean = false;
   private subs: Subscription = new Subscription();
+  private subs2: Subscription = new Subscription();
+  //private subs3: Subscription = new Subscription();
+  //private subs4: Subscription = new Subscription();
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private configService: ConfigService,
+    //private configService: ConfigService,
     private toastr: ToastrService,
     private route: ActivatedRoute,
     private router: Router
@@ -33,7 +36,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     let expired;
     //Get url's parameter
-    this.route.queryParams.subscribe(param => (expired = param['expired']));
+    this.subs = this.route.queryParams.subscribe(param => (expired = param['expired']));
     if (expired) {
       document.getElementsByTagName('h2')[0].textContent = 'La sesión ha expirado';
       document.getElementsByTagName('h5')[0].textContent = 'Por favor, identifíquese de nuevo';
@@ -51,21 +54,28 @@ export class LoginComponent implements OnInit, OnDestroy {
    *
    */
   onSubmit() {
-    this.isSubmitted = true;
-    this.subs = this.authService.login(this.loginForm.value).subscribe({
+    this.subs2 = this.authService.login(this.loginForm.value).subscribe({
       next: result => {
         let res = JSON.parse(JSON.stringify(result));
-        this.configService.getAllConfigsOfUser(res.user.id).subscribe();
-        this.authService.profile().subscribe();
+        /*
+        this.subs3 = this.configService.getAllConfigsOfUser(res.user.id).subscribe({
+          error: error => {
+            this.toastr.error(error ? error : 'Operación no autorizada');
+          },
+        });
+        this.subs4 = this.authService.profile().subscribe({
+          error: error => {
+            this.toastr.error(error ? error : 'Operación no autorizada');
+          },
+        });
+        */
+        this.isFormUpdating = false;
         this.toastr.info('Bienvenido ' + res.user.name);
         this.router.navigate([this.returnUrl || '/perfil']);
       },
       error: error => {
         this.toastr.error(error ? error : 'No se puede conectar con el servidor');
       },
-    });
-    this.subs.add(() => {
-      this.isSubmitted = false;
     });
   }
 
@@ -77,6 +87,9 @@ export class LoginComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy() {
     this.subs.unsubscribe();
+    this.subs2.unsubscribe();
+    //this.subs3.unsubscribe();
+    //this.subs4.unsubscribe();
   }
 
   get loginFormControls() {

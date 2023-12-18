@@ -29,6 +29,16 @@ export class GoodsreceiptService {
     );
   }
 
+  getAllBySupplier(id: any, param?: any): Observable<GoodsReceipt[]> {
+    return this.http
+      .get<GoodsReceipt[]>(`${this.baseUrl}/goodsreceipt/allbysupplier/${id}?${param}`)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
   getById(id: any): Observable<GoodsReceipt> {
     return this.http.get<GoodsReceipt>(`${this.baseUrl}/goodsreceipt/${id}`);
   }
