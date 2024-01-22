@@ -4,6 +4,7 @@ import { CheckSessionComponent } from './check-session.component';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
+import { DatePipe } from '@angular/common';
 
 describe('CheckSessionComponent', () => {
   let component: CheckSessionComponent;
@@ -19,7 +20,7 @@ describe('CheckSessionComponent', () => {
         }),
       ],
       declarations: [CheckSessionComponent],
-      providers: [HttpClient, HttpHandler, AuthService],
+      providers: [HttpClient, HttpHandler, AuthService, DatePipe],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CheckSessionComponent);

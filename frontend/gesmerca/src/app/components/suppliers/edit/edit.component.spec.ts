@@ -5,7 +5,7 @@ import { HttpClient, HttpHandler } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SupplierEditComponent } from './edit.component';
 
-describe('ProductEditComponent', () => {
+describe('SupplierEditComponent', () => {
   let component: SupplierEditComponent;
   let fixture: ComponentFixture<SupplierEditComponent>;
 

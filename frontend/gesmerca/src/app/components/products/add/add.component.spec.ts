@@ -3,6 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { ProductAddComponent } from './add.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ProductAddComponent', () => {
   let component: ProductAddComponent;
@@ -11,6 +12,7 @@ describe('ProductAddComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
+        RouterTestingModule,
         FormsModule,
         ReactiveFormsModule,
         ToastrModule.forRoot({
