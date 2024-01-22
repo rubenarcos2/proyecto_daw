@@ -300,17 +300,19 @@ export class GoodsReceiptEditComponent implements OnInit, OnDestroy {
         );
 
         //Delete this product of this goods receipt
-        this.subs8 = this.goodsReceiptService.deleteProduct(dataDeleteProdForm, id).subscribe({
-          next: res => {
-            this.router.navigate([`/recepcion/editar/${this.goodsReceipt?.id}`], {
-              queryParams: { op: 'true' },
-            });
-            this.toastr.success(res.message);
-          },
-          error: error => {
-            this.toastr.error(error ? error : 'Operación no autorizada');
-          },
-        });
+        this.subs8 = this.goodsReceiptService
+          .deleteProduct(dataDeleteProdForm, this.goodsReceipt?.id)
+          .subscribe({
+            next: res => {
+              this.router.navigate([`/recepcion/editar/${this.goodsReceipt?.id}`], {
+                queryParams: { op: 'true' },
+              });
+              this.toastr.success(res.message);
+            },
+            error: error => {
+              this.toastr.error(error ? error : 'Operación no autorizada');
+            },
+          });
       }
     }
   }

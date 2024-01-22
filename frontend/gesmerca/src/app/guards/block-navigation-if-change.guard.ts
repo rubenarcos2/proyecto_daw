@@ -11,10 +11,8 @@ export class CanDeactivateBlockNavigationIfChange {
     //TODO: not visible when session popup is visible or finished
     if (
       component.isFormUpdating &&
-      !(
-        !this.checkSessionService.isIdleTimerActive() ||
-        !this.checkSessionService.isCheckSessionActive()
-      )
+      (!this.checkSessionService.isIdleTimerActive() ||
+        !this.checkSessionService.isCheckSessionActive())
     )
       return window.confirm('Hay cambios sin guardar\n\n ¿Desea salir y perder los cambios?');
     else return true;

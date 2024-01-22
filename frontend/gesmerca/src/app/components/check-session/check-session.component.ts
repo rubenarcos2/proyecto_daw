@@ -65,14 +65,6 @@ export class CheckSessionComponent implements OnInit, OnDestroy {
    */
   cancel() {
     this.subs = this.authService.logout().subscribe({
-      next: res => {
-        this.element.style.display = 'none';
-        document.body.classList.remove('checkSession-modal-open');
-        this.isOpen = false;
-        this.router.navigate(['login'], {
-          queryParams: { expired: 'true' },
-        });
-      },
       error: error => {
         this.toastr.error(
           error ? error : 'No se puede conectar con el servidor para cerrar la sesión'
@@ -80,6 +72,13 @@ export class CheckSessionComponent implements OnInit, OnDestroy {
       },
     });
     this.stopCountDownTimer();
+
+    this.element.style.display = 'none';
+    document.body.classList.remove('checkSession-modal-open');
+    this.isOpen = false;
+    this.router.navigate(['login'], {
+      queryParams: { expired: 'true' },
+    });
   }
 
   /**

@@ -27,6 +27,9 @@ class ProductController extends Controller
         $this->middleware('permission:product-delete', ['only' => ['destroy']]);
     }
 
+    /**
+     * Display a listing of the all products paginated.
+     */
     public function index()
     {
         try{
@@ -123,6 +126,9 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * Display a product.
+     */
     public function show($id){
         try{
             $product = Product::find($id);
@@ -142,6 +148,9 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * Save a product.
+     */
     public function store(Request $request){
         try{
             $request->validate([
@@ -184,6 +193,9 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * Delete a product.
+     */
     public function destroy(Request $request){
         try{
             $request->validate([
@@ -201,6 +213,9 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * Modify a product.
+     */
     public function update(Request $request){
         try{
             $request->validate([
@@ -243,6 +258,9 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * Obtains the lowest price in the purchase history.
+     */
     private function getPriceMin($idproduct){
         try{
             $grp = GoodsReceiptProduct::where('idproduct', $idproduct)->select('price')->orderBy('price', 'asc')->first();
@@ -255,6 +273,9 @@ class ProductController extends Controller
         }
     }
     
+    /**
+     * Obtains the highest price in the purchase history.
+     */
     private function getPriceMax($idproduct){
         try{
             $grp = GoodsReceiptProduct::where('idproduct', $idproduct)->select('price')->orderBy('price', 'desc')->first();
@@ -267,6 +288,9 @@ class ProductController extends Controller
         }
     }
     
+    /**
+     * Obtains the average price in the purchase history.
+     */
     private function getPriceAvg($idproduct){
         try{
             $grp = GoodsReceiptProduct::where('idproduct', $idproduct);
@@ -279,6 +303,9 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * Save product's image
+     */
     private function saveThumbnail($saveToDir, $imagePath, $imageName, $max_x, $max_y) {
         try{
             if(preg_match("'^(.*)\.(gif|jpe?g|png)$'i", $imageName, $ext)){
@@ -329,6 +356,9 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * Remove product's image
+     */
     private function deleteImages($requestImage){
         try{
             $image_name = substr($requestImage, strlen(URL::to('').'/storage/assets/img/products/'));
