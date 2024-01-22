@@ -47,6 +47,14 @@ export class NavBarComponent implements OnInit, OnDestroy {
           //The user profile is reloaded because it is necessary to load the user's preferences in case of url change or page update.
           if (this.authService.isLoggedIn && e.url != '/login?expired=true') {
             this.subs2 = this.authService.profile().subscribe({
+              complete: () => {
+                let user = this.authService.user;
+                this.configService.getAllConfigsOfUser(user.id).subscribe({
+                  error: error => {
+                    this.toastr.error(error ? error : 'No se puede conectar con el servidor');
+                  },
+                });
+              },
               error: error => {
                 this.toastr.error(error ? error : 'No se puede conectar con el servidor');
               },
