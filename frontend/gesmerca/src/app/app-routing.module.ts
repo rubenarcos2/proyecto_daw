@@ -27,6 +27,7 @@ import { GoodsReceiptEditComponent } from './components/goodsreceipt/edit/edit.c
 //Guards
 import { CanDeactivateBlockNavigationIfChange } from './guards/block-navigation-if-change.guard';
 import { AuthGuard } from './guards/auth.guard';
+import { PreventIframeGuard } from './guards/prevent-iframe.guard';
 
 const routes: Routes = [
   {
@@ -44,95 +45,95 @@ const routes: Routes = [
   {
     path: 'perfil',
     component: ProfileComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, PreventIframeGuard],
   },
   {
     path: 'productos',
     component: ProductListComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, PreventIframeGuard],
     data: { permission: ['product-list'] },
   },
   {
     path: 'productos/nuevo',
     component: ProductAddComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, PreventIframeGuard],
     canDeactivate: [CanDeactivateBlockNavigationIfChange],
     data: { permission: ['product-create'] },
   },
   {
     path: 'productos/editar/:id',
     component: ProductEditComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, PreventIframeGuard],
     canDeactivate: [CanDeactivateBlockNavigationIfChange],
     data: { permission: ['product-edit'] },
   },
   {
     path: 'proveedores',
     component: SupplierListComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, PreventIframeGuard],
     data: { permission: ['supplier-list'] },
   },
   {
     path: 'proveedores/nuevo',
     component: SupplierAddComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, PreventIframeGuard],
     canDeactivate: [CanDeactivateBlockNavigationIfChange],
     data: { permission: ['supplier-create'] },
   },
   {
     path: 'proveedores/editar/:id',
     component: SupplierEditComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, PreventIframeGuard],
     canDeactivate: [CanDeactivateBlockNavigationIfChange],
     data: { permission: ['supplier-edit'] },
   },
   {
     path: 'recepcion',
     component: GoodsReceiptListComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, PreventIframeGuard],
     data: { permission: ['goodsreceipt-list'] },
   },
   {
     path: 'recepcion/nuevo',
     component: GoodsReceiptAddComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, PreventIframeGuard],
     canDeactivate: [CanDeactivateBlockNavigationIfChange],
     data: { permission: ['goodsreceipt-create'] },
   },
   {
     path: 'recepcion/editar/:id',
     component: GoodsReceiptEditComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, PreventIframeGuard],
     canDeactivate: [CanDeactivateBlockNavigationIfChange],
     data: { permission: ['goodsreceipt-edit'] },
   },
   {
     path: 'config',
     component: ConfigListComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, PreventIframeGuard],
   },
   {
     path: 'config/general',
     component: ConfigGeneralListComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, PreventIframeGuard],
     data: { permission: ['config-list'] },
   },
   {
     path: 'config/general/editar/:id',
     component: ConfigGeneralEditComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, PreventIframeGuard],
     data: { permission: ['config-edit'] },
   },
   {
     path: 'roles',
     component: RoleListComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, PreventIframeGuard],
     data: { permission: ['role-list'] },
   },
   {
     path: 'permisos',
     component: PermissionsListComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, PreventIframeGuard],
     data: { permission: ['permission-list'] },
   },
   {
